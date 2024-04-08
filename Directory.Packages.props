@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Kentico.Xperience.Admin" Version="28.4.2" />
+    <PackageVersion Include="Kentico.Xperience.WebApp" Version="28.4.2" />
+    <PackageVersion Include="kentico.xperience.azurestorage" Version="28.4.2" />
+    <PackageVersion Include="kentico.xperience.imageprocessing" Version="28.4.2" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.23.0.88079" />
+  </ItemGroup>
+</Project>
