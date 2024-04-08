@@ -1,8 +1,6 @@
-# ---Package Name---
+# Nittin.Xperience.Localization
 
----Select the correct badge for the support policy and update the GitHub Action pipeline badge to point to this repository (replace `repo-template`)---
-
-[![CI: Build and Test](https://github.com/nittin-cz/repo-template/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/repo-template/actions/workflows/ci.yml)
+[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml)
 
 ---Remove/replace all lines surrounded by 3 dashes---
 
@@ -20,7 +18,7 @@
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 28.1.0         | 1.0.0           |
+| >= 28.2.1         | 1.0.0           |
 
 ### Dependencies
 
@@ -36,7 +34,7 @@
 Add the package to your application using the .NET CLI
 
 ```powershell
-dotnet add package Nittin.Xperience.RepoTemplate
+dotnet add package Nittin.Xperience.Localization
 ```
 
 ## Quick Start

@@ -9,8 +9,8 @@
     <VersionSuffix>prerelease-1</VersionSuffix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <PackageProjectUrl>https://github.com/nittin-cz/REPOSITORY_NAME</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/nittin-cz/REPOSITORY_NAME/releases</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/nittin-cz/Nittin.Xperience.Localization</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/nittin-cz/Nittin.Xperience.Localization/releases</PackageReleaseNotes>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>xperience;kentico;aspnetcore</PackageTags>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -30,7 +30,7 @@
     <CopyDocumentationFilesFromPackages>true</CopyDocumentationFilesFromPackages>
     <CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <RootNamespace>Nittin.Xperience.RepoTemplate</RootNamespace>
+    <RootNamespace>Nittin.Xperience.Localization</RootNamespace>
 
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <TimestampServerUrl>http://timestamp.digicert.com</TimestampServerUrl>

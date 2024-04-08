@@ -68,7 +68,7 @@ To run the Sample app Admin customization in development mode, add the following
    - `refactor/` - for restructuring of existing features
    - `fix/` - for bugfixes
 
-1. Run `dotnet format` against the `src/Nittin.Xperience.RepoTemplate` project
+1. Run `dotnet format` against the `src/Nittin.Xperience.Localization` project
 
    > use `dotnet: format` VS Code task.
 
