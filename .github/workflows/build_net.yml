@@ -10,10 +10,10 @@ env:
   REGISTRY: https://api.nuget.org/v3/index.json
   NAME: nittin.xperience.localization
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-  VERSION: 1.0.0
+  VERSION:
 
 jobs:
-  Build_net:
+  Build_pre:
     if: ${{ github.repository_owner == 'nittin-cz' }}
     runs-on: ubuntu-latest
     steps:
@@ -30,11 +30,52 @@ jobs:
         with:
           dotnet-version: "6.x"
 
+      - name: Get version number
+        uses: reecetech/version-increment@2023.9.3
+        id: version
+        with:
+          scheme: semver
+          increment: patch
+          release_branch: main
+
       - name: Package the project
         run: |
-          dotnet pack src/Nittin.Xperience.Localization/Nittin.Xperience.Localization.csproj -p:PackageID=${{ env.NAME }} -p:Version=${{ env.VERSION }} --configuration Release
+          dotnet pack src/Nittin.Xperience.Localization/Nittin.Xperience.Localization.csproj -p:PackageID=${{ env.NAME }} -p:Version=${{ steps.version.outputs.version }} --configuration Release
 
       - name: Publish the package
         run: |
-          # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
-          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
+          # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
+          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
+
+  # Build_net:
+  #   if: ${{ github.repository_owner == 'nittin-cz' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Code checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         token: ${{ secrets.NITTIN_CI_TOKEN }}
+
+  #     - name: Set VERSION variable from tag
+  #       run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+  #     - name: Setup .NET 6.x
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: "6.x"
+
+  #     - name: Get version number
+  #       uses: reecetech/version-increment@2023.9.3
+  #       id: version
+  #       with:
+  #         scheme: semver
+  #         increment: patch
+
+  #     - name: Package the project
+  #       run: |
+  #         dotnet pack src/Nittin.Xperience.Localization/Nittin.Xperience.Localization.csproj -p:PackageID=${{ env.NAME }} -p:Version=${{ env.VERSION }} --configuration Release
+
+  #     - name: Publish the package
+  #       run: |
+  #         # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
+  #         dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
