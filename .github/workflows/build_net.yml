@@ -3,6 +3,8 @@ name: build push nuget to registry
 on:
   workflow_dispatch:
   push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
   REGISTRY: https://api.nuget.org/v3/index.json
@@ -20,6 +22,9 @@ jobs:
         with:
           token: ${{ secrets.NITTIN_CI_TOKEN }}
 
+      - name: Set VERSION variable from tag
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
       - name: Setup .NET 6.x
         uses: actions/setup-dotnet@v3
         with:
@@ -27,9 +32,9 @@ jobs:
 
       - name: Package the project
         run: |
-          dotnet pack src/Nittin.Xperience.Localization/Nittin.Xperience.Localization.csproj -p:PackageID=${{ env.NAME }} -p:Version=${{ env.VERSION }}-${{ github.sha }} --configuration Release
+          dotnet pack src/Nittin.Xperience.Localization/Nittin.Xperience.Localization.csproj -p:PackageID=${{ env.NAME }} -p:Version=${{ env.VERSION }} --configuration Release
 
       - name: Publish the package
         run: |
-          # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}-${{ github.sha }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
-          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}-${{ github.sha }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
+          # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
+          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ env.VERSION }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
