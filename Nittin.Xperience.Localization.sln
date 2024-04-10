@@ -5,6 +5,22 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nittin.Xperience.Localization", "src\Nittin.Xperience.Localization\Nittin.Xperience.Localization.csproj", "{9FF58CD4-64C9-45EF-95F8-FAE12877B2A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{7EEE5EAC-F1C3-4E1A-AB57-5BB618CA0C33}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.build.targets = Directory.build.targets
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{62B9A642-C744-45CB-B8BE-2B73CFC1DE01}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{CC474230-CFC8-495B-BC31-44540708569A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DancingGoat", "examples\DancingGoat\DancingGoat.csproj", "{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +31,16 @@ Global
 		{9FF58CD4-64C9-45EF-95F8-FAE12877B2A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FF58CD4-64C9-45EF-95F8-FAE12877B2A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FF58CD4-64C9-45EF-95F8-FAE12877B2A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DAF20DC6-1546-4C4E-A7D1-9C9F9A1A80DA} = {CC474230-CFC8-495B-BC31-44540708569A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B2A20BC-F57B-4AAE-B1C2-E4DC52EFCAC5}
