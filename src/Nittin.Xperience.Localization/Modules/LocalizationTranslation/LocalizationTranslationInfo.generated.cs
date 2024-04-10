@@ -51,10 +51,10 @@ namespace Nittin.Xperience.Localization
         /// Localization key.
         /// </summary>
         [DatabaseField]
-        public virtual int LocalizationKey
+        public virtual int LocalizationTranslationLocalizationKeyId
         {
-            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationKey)), 0);
-            set => SetValue(nameof(LocalizationKey), value);
+            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationTranslationLocalizationKeyId)), 0);
+            set => SetValue(nameof(LocalizationTranslationLocalizationKeyId), value);
         }
 
 
@@ -62,10 +62,10 @@ namespace Nittin.Xperience.Localization
         /// Language.
         /// </summary>
         [DatabaseField]
-        public virtual int Language
+        public virtual int LocalizationTranslationContentLanguageId
         {
-            get => ValidationHelper.GetInteger(GetValue(nameof(Language)), 0);
-            set => SetValue(nameof(Language), value);
+            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationTranslationContentLanguageId)), 0);
+            set => SetValue(nameof(LocalizationTranslationContentLanguageId), value);
         }
 
 
@@ -73,10 +73,10 @@ namespace Nittin.Xperience.Localization
         /// Translation text.
         /// </summary>
         [DatabaseField]
-        public virtual string TranslationText
+        public virtual string LocalizationTranslationText
         {
-            get => ValidationHelper.GetString(GetValue(nameof(TranslationText)), String.Empty);
-            set => SetValue(nameof(TranslationText), value, String.Empty);
+            get => ValidationHelper.GetString(GetValue(nameof(LocalizationTranslationText)), String.Empty);
+            set => SetValue(nameof(LocalizationTranslationText), value, String.Empty);
         }
 
 

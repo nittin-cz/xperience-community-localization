@@ -26,10 +26,10 @@ namespace Nittin.Xperience.Localization
         /// Localization key ID.
         /// </summary>
         [DatabaseField]
-        public virtual int LocalizationKeyID
+        public virtual int LocalizationKeyId
         {
-            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationKeyID)), 0);
-            set => SetValue(nameof(LocalizationKeyID), value);
+            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationKeyId)), 0);
+            set => SetValue(nameof(LocalizationKeyId), value);
         }
 
 
@@ -59,10 +59,10 @@ namespace Nittin.Xperience.Localization
         /// Description.
         /// </summary>
         [DatabaseField]
-        public virtual string Description
+        public virtual string LocalizationDescription
         {
-            get => ValidationHelper.GetString(GetValue(nameof(Description)), String.Empty);
-            set => SetValue(nameof(Description), value, String.Empty);
+            get => ValidationHelper.GetString(GetValue(nameof(LocalizationDescription)), String.Empty);
+            set => SetValue(nameof(LocalizationDescription), value, String.Empty);
         }
 
 

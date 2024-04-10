@@ -1,36 +1,94 @@
-﻿using Kentico.Xperience.Admin.Base;
+﻿using CMS.ContentEngine;
+using CMS.DataEngine;
+using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
 using Nittin.Xperience.Localization.Admin.UIPages;
+using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
 
-[assembly: UIPage(typeof(LocalizationTranslationListingPage), "create", typeof(LocalizationTranslationCreatePage),
-    "Create a localization key",
-    TemplateNames.EDIT, 1)]
+[assembly: UIPage(
+    parentType: typeof(LocalizationTranslationListingPage),
+    slug: "create",
+    uiPageType: typeof(LocalizationTranslationCreatePage),
+    name: "Create a localization key",
+    templateName: TemplateNames.EDIT,
+    order: 1)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-public class
-    LocalizationTranslationCreatePage : CreatePage<LocalizationTranslationInfo, LocalizationTranslationListingPage>
+internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTranslationConfigurationModel>
 {
-    public LocalizationTranslationCreatePage(IFormComponentMapper formComponentMapper, IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator) : base(formComponentMapper, formDataBinder, pageUrlGenerator)
+    private readonly IPageUrlGenerator pageUrlGenerator;
+    private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
+    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
+
+    private LocalizationTranslationConfigurationModel? model = null;
+
+    public LocalizationTranslationCreatePage(
+        IFormItemCollectionProvider formItemCollectionProvider,
+        IFormDataBinder formDataBinder,
+        IPageUrlGenerator pageUrlGenerator,
+        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
+        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : base(formItemCollectionProvider, formDataBinder)
     {
+        this.pageUrlGenerator = pageUrlGenerator;
+        this.localizationKeyInfoProvider = localizationKeyInfoProvider;
+        this.contentLanguageInfoProvider = contentLanguageInfoProvider;
     }
-    public override Task ConfigurePage()
-    {
-        PageConfiguration.UIFormName = "LocalizationTranslationCreate";
 
-        return base.ConfigurePage();
+    protected override LocalizationTranslationConfigurationModel Model
+    {
+        get
+        {
+            model ??= new();
+
+            return model;
+        }
     }
 
-    protected override Task<ICommandResponse> GetSubmitSuccessResponse(LocalizationTranslationInfo savedInfoObject,
-        ICollection<IFormItem> items) => Task.FromResult(
-        (ICommandResponse)NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationTranslationListingPage>())
-            .AddSuccessMessage("Localization key created"));
-
-    protected override Task SetFormData(LocalizationTranslationInfo infoObject,
-        IFormFieldValueProvider fieldValueProvider)
+    protected override Task<ICommandResponse> ProcessFormData(LocalizationTranslationConfigurationModel model, ICollection<IFormItem> formItems)
     {
-        infoObject.LocalizationTranslationGuid = Guid.NewGuid();
-        return base.SetFormData(infoObject, fieldValueProvider);
+        var result = ValidateAndProcess(model);
+
+        if (result == IndexModificationResult.Success)
+        {
+            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationTranslationListingPage>())
+                .AddSuccessMessage("Translation record created");
+
+            return Task.FromResult<ICommandResponse>(successResponse);
+        }
+
+        var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
+            .AddErrorMessage("Could not create Translation.");
+
+        return Task.FromResult<ICommandResponse>(errorResponse);
+    }
+
+    protected IndexModificationResult ValidateAndProcess(LocalizationTranslationConfigurationModel configuration)
+    {
+        var localizationKey = localizationKeyInfoProvider
+            .Get()
+            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyId), configuration.LocalizationKey)
+            .FirstOrDefault();
+
+        var language = contentLanguageInfoProvider
+            .Get()
+            .WhereEquals(nameof(ContentLanguageInfo.ContentLanguageDisplayName), configuration.LanguageName)
+            .FirstOrDefault();
+
+        if (localizationKey == default || language == default)
+        {
+            return IndexModificationResult.Failure;
+        }
+
+        var localizationTranslationInfo = new LocalizationTranslationInfo
+        {
+            LocalizationTranslationLocalizationKeyId = localizationKey.LocalizationKeyId,
+            LocalizationTranslationContentLanguageId = language.ContentLanguageID,
+            LocalizationTranslationText = configuration.TranslationText
+        };
+
+        localizationTranslationInfo.Insert();
+
+        return IndexModificationResult.Success;
     }
 }

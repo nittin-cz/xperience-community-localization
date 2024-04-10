@@ -13,7 +13,7 @@ public class LocalizationKeyListingPage : ListingPage
     public override Task ConfigurePage()
     {
         PageConfiguration.ColumnConfigurations
-            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyID), "ID")
+            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyId), "ID")
         .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyName), "Name");
 
         PageConfiguration.HeaderActions.AddLink<LocalizationKeyCreatePage>("Create");

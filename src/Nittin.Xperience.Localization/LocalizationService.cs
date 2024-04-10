@@ -35,13 +35,13 @@ public class LocalizationService
     public string? GetValueByNameAndLanguage(string name, ContentLanguageInfo language)
     {
         var result = localizationTranslationInfoProvider.Get()
-            .Source(s => s.Join<LocalizationKeyInfo>(nameof(LocalizationTranslationInfo.LocalizationKey), nameof(LocalizationKeyInfo.LocalizationKeyID)))
+            .Source(s => s.Join<LocalizationKeyInfo>(nameof(LocalizationTranslationInfo.LocalizationTranslationLocalizationKeyId), nameof(LocalizationKeyInfo.LocalizationKeyId)))
             .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyName), name)
-            .WhereEquals(nameof(LocalizationTranslationInfo.Language), language.ContentLanguageID)
+            .WhereEquals(nameof(LocalizationTranslationInfo.LocalizationTranslationContentLanguageId), language.ContentLanguageID)
             .TopN(1)
             .FirstOrDefault();
 
-        return result?.TranslationText;
+        return result?.LocalizationTranslationText;
     }
 
     public Dictionary<string, string> GetAllValuesForCulture(string culture)
@@ -53,15 +53,15 @@ public class LocalizationService
     public Dictionary<string, string> GetAllValuesForLanguage(ContentLanguageInfo language)
     {
         var dataSet = localizationTranslationInfoProvider.Get()
-            .WhereEquals(nameof(LocalizationTranslationInfo.Language), language.ContentLanguageID)
-            .Source(s => s.Join<LocalizationKeyInfo>(nameof(LocalizationTranslationInfo.LocalizationKey), nameof(LocalizationKeyInfo.LocalizationKeyID)))
+            .WhereEquals(nameof(LocalizationTranslationInfo.LocalizationTranslationContentLanguageId), language.ContentLanguageID)
+            .Source(s => s.Join<LocalizationKeyInfo>(nameof(LocalizationTranslationInfo.LocalizationTranslationLocalizationKeyId), nameof(LocalizationKeyInfo.LocalizationKeyId)))
             .Result;
 
         return dataSet?.Tables[0].Rows.Cast<DataRow>()
             .Select(r => new
             {
                 Key = r.Field<string>(nameof(LocalizationKeyInfo.LocalizationKeyName)),
-                TranslationText = r.Field<string>(nameof(LocalizationTranslationInfo.TranslationText))
+                TranslationText = r.Field<string>(nameof(LocalizationTranslationInfo.LocalizationTranslationText))
             })
             .Where(i => i.Key != null)
             .GroupBy(i => i.Key!, i => i.TranslationText)

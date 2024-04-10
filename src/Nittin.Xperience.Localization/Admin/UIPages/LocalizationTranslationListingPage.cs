@@ -23,7 +23,7 @@ public class LocalizationTranslationListingPage : ListingPage
             .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyName), "LocalizationKey Name", sortable: true)
             //.AddColumn(nameof(LocalizationTranslationInfo.Language), "Language id", sortable: true)
             .AddColumn(nameof(ContentLanguageInfo.ContentLanguageDisplayName), "Language", sortable: true)
-            .AddColumn(nameof(LocalizationTranslationInfo.TranslationText), "Translation", sortable: true);
+            .AddColumn(nameof(LocalizationTranslationInfo.LocalizationTranslationText), "Translation", sortable: true);
 
         PageConfiguration.HeaderActions.AddLink<LocalizationTranslationCreatePage>("Create");
         PageConfiguration.AddEditRowAction<LocalizationTranslationEditPage>();

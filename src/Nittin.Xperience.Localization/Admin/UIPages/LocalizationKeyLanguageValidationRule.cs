@@ -17,14 +17,14 @@ public class
 
     public override Task<ValidationResult> Validate(int? value, IFormFieldValueProvider formFieldValueProvider)
     {
-        bool keyIdHasValue = formFieldValueProvider.TryGet(nameof(LocalizationTranslationInfo.LocalizationKey), out int localizationKey);
-        bool languageHasValue = formFieldValueProvider.TryGet(nameof(LocalizationTranslationInfo.Language), out int language);
+        bool keyIdHasValue = formFieldValueProvider.TryGet(nameof(LocalizationTranslationInfo.LocalizationTranslationLocalizationKeyId), out int localizationKey);
+        bool languageHasValue = formFieldValueProvider.TryGet(nameof(LocalizationTranslationInfo.LocalizationTranslationContentLanguageId), out int language);
 
         if (keyIdHasValue && languageHasValue)
         {
             bool pairExists = localizationTranslationInfoProvider.Get()
-                .WhereEquals(nameof(LocalizationTranslationInfo.LocalizationKey), localizationKey)
-                .WhereEquals(nameof(LocalizationTranslationInfo.Language), language)
+                .WhereEquals(nameof(LocalizationTranslationInfo.LocalizationTranslationLocalizationKeyId), localizationKey)
+                .WhereEquals(nameof(LocalizationTranslationInfo.LocalizationTranslationContentLanguageId), language)
                 .TopN(1).Count() > 0;
 
             if (pairExists)

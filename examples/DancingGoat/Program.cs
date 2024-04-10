@@ -58,6 +58,8 @@ builder.Services.AddLocalization()
 
 builder.Services.AddDancingGoatServices();
 
+builder.Services.AddNittinLocalization();
+
 ConfigureMembershipServices(builder.Services);
 
 var app = builder.Build();
