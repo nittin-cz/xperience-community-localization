@@ -20,16 +20,30 @@ namespace Nittin.Xperience.Localization
         /// <summary>
         /// Object type.
         /// </summary>
-        public const string OBJECT_TYPE = "nittinlocalization.localizationkey";
+        public const string OBJECT_TYPE = "nittinlocalization.localizationkeyitem";
+
+
+        /// <summary>
+        /// Type information.
+        /// </summary>
+        public static readonly ObjectTypeInfo TYPEINFO = new(typeof(IInfoProvider<LocalizationKeyInfo>), OBJECT_TYPE, "NittinLocalization.LocalizationKeyItem", nameof(LocalizationKeyItemId), null, nameof(LocalizationKeyItemGuid), nameof(LocalizationKeyItemName), nameof(LocalizationKeyItemName), null, null, null)
+        {
+            TouchCacheDependencies = true,
+            ContinuousIntegrationSettings =
+            {
+                Enabled = true
+            },
+        };
+
 
         /// <summary>
         /// Localization key ID.
         /// </summary>
         [DatabaseField]
-        public virtual int LocalizationKeyId
+        public virtual int LocalizationKeyItemId
         {
-            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationKeyId)), 0);
-            set => SetValue(nameof(LocalizationKeyId), value);
+            get => ValidationHelper.GetInteger(GetValue(nameof(LocalizationKeyItemId)), 0);
+            set => SetValue(nameof(LocalizationKeyItemId), value);
         }
 
 
@@ -37,10 +51,10 @@ namespace Nittin.Xperience.Localization
         /// Localization key guid.
         /// </summary>
         [DatabaseField]
-        public virtual Guid LocalizationKeyGuid
+        public virtual Guid LocalizationKeyItemGuid
         {
-            get => ValidationHelper.GetGuid(GetValue(nameof(LocalizationKeyGuid)), Guid.Empty);
-            set => SetValue(nameof(LocalizationKeyGuid), value);
+            get => ValidationHelper.GetGuid(GetValue(nameof(LocalizationKeyItemGuid)), Guid.Empty);
+            set => SetValue(nameof(LocalizationKeyItemGuid), value);
         }
 
 
@@ -48,10 +62,10 @@ namespace Nittin.Xperience.Localization
         /// Localization key name.
         /// </summary>
         [DatabaseField]
-        public virtual string LocalizationKeyName
+        public virtual string LocalizationKeyItemName
         {
-            get => ValidationHelper.GetString(GetValue(nameof(LocalizationKeyName)), String.Empty);
-            set => SetValue(nameof(LocalizationKeyName), value);
+            get => ValidationHelper.GetString(GetValue(nameof(LocalizationKeyItemName)), String.Empty);
+            set => SetValue(nameof(LocalizationKeyItemName), value);
         }
 
 
@@ -59,10 +73,10 @@ namespace Nittin.Xperience.Localization
         /// Description.
         /// </summary>
         [DatabaseField]
-        public virtual string LocalizationDescription
+        public virtual string LocalizationKeyItemDescription
         {
-            get => ValidationHelper.GetString(GetValue(nameof(LocalizationDescription)), String.Empty);
-            set => SetValue(nameof(LocalizationDescription), value, String.Empty);
+            get => ValidationHelper.GetString(GetValue(nameof(LocalizationKeyItemDescription)), String.Empty);
+            set => SetValue(nameof(LocalizationKeyItemDescription), value, String.Empty);
         }
 
 

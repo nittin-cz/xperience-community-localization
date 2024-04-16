@@ -6,7 +6,7 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 [assembly: UIPage(
     parentType: typeof(LocalizationKeyListingPage),
-    slug: ":",
+    slug: PageParameterConstants.PARAMETERIZED_SLUG,
     uiPageType: typeof(LocalizationKeyEditPage),
     name: "Edit localization key",
     templateName: TemplateNames.EDIT,
@@ -75,8 +75,8 @@ internal class LocalizationKeyEditPage : ModelEditPage<LocalizationKeyConfigurat
         var localizationKeyInfo = localizationKeyInfoProvider.Get().WithID(KeyIdentifier).FirstOrDefault() ??
             throw new InvalidOperationException("Specified key does not exist");
 
-        localizationKeyInfo.LocalizationDescription = configuration.Description;
-        localizationKeyInfo.LocalizationKeyName = configuration.Key;
+        localizationKeyInfo.LocalizationKeyItemDescription = configuration.Description;
+        localizationKeyInfo.LocalizationKeyItemName = configuration.Key;
 
         localizationKeyInfo.Update();
 

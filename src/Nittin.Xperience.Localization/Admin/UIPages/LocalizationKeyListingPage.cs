@@ -1,8 +1,13 @@
 ﻿using Kentico.Xperience.Admin.Base;
 using Nittin.Xperience.Localization.Admin.UIPages;
 
-[assembly: UIPage(typeof(LocalizationApplication), "localization-keys", typeof(LocalizationKeyListingPage), "Localization keys",
-    TemplateNames.LISTING, 20)]
+[assembly: UIPage(
+    parentType: typeof(LocalizationApplication),
+    slug: "localization-keys",
+    uiPageType: typeof(LocalizationKeyListingPage),
+    name: "Localization keys",
+    templateName: TemplateNames.LISTING,
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
@@ -13,8 +18,8 @@ public class LocalizationKeyListingPage : ListingPage
     public override Task ConfigurePage()
     {
         PageConfiguration.ColumnConfigurations
-            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyId), "ID")
-        .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyName), "Name");
+            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemId), "ID")
+        .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemName), "Name");
 
         PageConfiguration.HeaderActions.AddLink<LocalizationKeyCreatePage>("Create");
         PageConfiguration.AddEditRowAction<LocalizationKeyEditPage>();

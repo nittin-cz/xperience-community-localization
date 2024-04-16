@@ -18,8 +18,8 @@ public class LocalizationKeyConfigurationModel
 
     public LocalizationKeyConfigurationModel(LocalizationKeyInfo localizationKey)
     {
-        Id = localizationKey.LocalizationKeyId;
-        Key = localizationKey.LocalizationKeyName;
-        Description = localizationKey.LocalizationDescription;
+        Id = localizationKey.LocalizationKeyItemId;
+        Key = localizationKey.LocalizationKeyItemName;
+        Description = localizationKey.LocalizationKeyItemDescription;
     }
 }

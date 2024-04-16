@@ -15,7 +15,7 @@ internal class TranslationKeyOptionsProvider : IDropDownOptionsProvider
             .GetEnumerableTypedResultAsync())
         .Select(x => new DropDownOptionItem()
         {
-            Value = x.LocalizationKeyName,
-            Text = x.LocalizationKeyName
+            Value = x.LocalizationKeyItemName,
+            Text = x.LocalizationKeyItemName
         });
 }

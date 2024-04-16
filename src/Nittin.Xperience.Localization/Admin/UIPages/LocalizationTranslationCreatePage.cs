@@ -9,9 +9,9 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
     parentType: typeof(LocalizationTranslationListingPage),
     slug: "create",
     uiPageType: typeof(LocalizationTranslationCreatePage),
-    name: "Create a localization key",
+    name: "Create a translation",
     templateName: TemplateNames.EDIT,
-    order: 1)]
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
@@ -67,7 +67,7 @@ internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTra
     {
         var localizationKey = localizationKeyInfoProvider
             .Get()
-            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyId), configuration.LocalizationKey)
+            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyItemName), configuration.LocalizationKeyName)
             .FirstOrDefault();
 
         var language = contentLanguageInfoProvider
@@ -80,11 +80,11 @@ internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTra
             return IndexModificationResult.Failure;
         }
 
-        var localizationTranslationInfo = new LocalizationTranslationInfo
+        var localizationTranslationInfo = new LocalizationTranslationItemInfo
         {
-            LocalizationTranslationLocalizationKeyId = localizationKey.LocalizationKeyId,
-            LocalizationTranslationContentLanguageId = language.ContentLanguageID,
-            LocalizationTranslationText = configuration.TranslationText
+            LocalizationTranslationItemLocalizationKeyItemId = localizationKey.LocalizationKeyItemId,
+            LocalizationTranslationItemContentLanguageId = language.ContentLanguageID,
+            LocalizationTranslationItemText = configuration.TranslationText
         };
 
         localizationTranslationInfo.Insert();

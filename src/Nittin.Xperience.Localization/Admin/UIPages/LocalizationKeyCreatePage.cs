@@ -9,7 +9,7 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
     uiPageType: typeof(LocalizationKeyCreatePage),
     name: "Create a localization key",
     templateName: TemplateNames.EDIT,
-    order: 1)]
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
@@ -55,8 +55,8 @@ internal class LocalizationKeyCreatePage : ModelEditPage<LocalizationKeyConfigur
     {
         var localizationKeyInfo = new LocalizationKeyInfo
         {
-            LocalizationKeyName = configuration.Key,
-            LocalizationDescription = configuration.Description
+            LocalizationKeyItemName = configuration.Key,
+            LocalizationKeyItemDescription = configuration.Description
         };
 
         localizationKeyInfo.Insert();

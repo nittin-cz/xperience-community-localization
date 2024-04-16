@@ -7,11 +7,11 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 [assembly: UIPage(
     parentType: typeof(LocalizationTranslationListingPage),
-    slug: "create",
+    slug: PageParameterConstants.PARAMETERIZED_SLUG,
     uiPageType: typeof(LocalizationTranslationEditPage),
-    name: "Create a localization key",
+    name: "Edit translation key",
     templateName: TemplateNames.EDIT,
-    order: 1)]
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
@@ -20,7 +20,7 @@ internal class LocalizationTranslationEditPage : ModelEditPage<LocalizationTrans
     private readonly IPageUrlGenerator pageUrlGenerator;
     private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
     private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
-    private readonly IInfoProvider<LocalizationTranslationInfo> localizationTranslationInfoProvider;
+    private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider;
 
     [PageParameter(typeof(IntPageModelBinder))]
     public int KeyIdentifier { get; set; }
@@ -33,7 +33,7 @@ internal class LocalizationTranslationEditPage : ModelEditPage<LocalizationTrans
         IPageUrlGenerator pageUrlGenerator,
         IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
-        IInfoProvider<LocalizationTranslationInfo> localizationTranslationInfoProvider) : base(formItemCollectionProvider, formDataBinder)
+        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider) : base(formItemCollectionProvider, formDataBinder)
     {
         this.pageUrlGenerator = pageUrlGenerator;
         this.localizationKeyInfoProvider = localizationKeyInfoProvider;
@@ -63,15 +63,15 @@ internal class LocalizationTranslationEditPage : ModelEditPage<LocalizationTrans
 
         string languageName = contentLanguageInfoProvider
             .Get()
-            .WithID(infoModel.LocalizationTranslationContentLanguageId)
+            .WithID(infoModel.LocalizationTranslationItemContentLanguageId)
             .FirstOrDefault()
             !.ContentLanguageDisplayName;
 
         string localizationKeyName = localizationKeyInfoProvider
             .Get()
-            .WithID(infoModel.LocalizationTranslationLocalizationKeyId)
+            .WithID(infoModel.LocalizationTranslationItemLocalizationKeyItemId)
             .FirstOrDefault()
-            !.LocalizationKeyName;
+            !.LocalizationKeyItemName;
 
         return new LocalizationTranslationConfigurationModel(infoModel, languageName, localizationKeyName);
     }
@@ -101,7 +101,7 @@ internal class LocalizationTranslationEditPage : ModelEditPage<LocalizationTrans
 
         var localizationKey = localizationKeyInfoProvider
             .Get()
-            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyId), configuration.LocalizationKey)
+            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyItemId), configuration.LocalizationKeyName)
             .FirstOrDefault();
 
         var language = contentLanguageInfoProvider
@@ -114,9 +114,9 @@ internal class LocalizationTranslationEditPage : ModelEditPage<LocalizationTrans
             return IndexModificationResult.Failure;
         }
 
-        localizationTranslationInfo.LocalizationTranslationContentLanguageId = language.ContentLanguageID;
-        localizationTranslationInfo.LocalizationTranslationLocalizationKeyId = localizationKey.LocalizationKeyId;
-        localizationTranslationInfo.LocalizationTranslationText = configuration.TranslationText;
+        localizationTranslationInfo.LocalizationTranslationItemContentLanguageId = language.ContentLanguageID;
+        localizationTranslationInfo.LocalizationTranslationItemLocalizationKeyItemId = localizationKey.LocalizationKeyItemId;
+        localizationTranslationInfo.LocalizationTranslationItemText = configuration.TranslationText;
 
         localizationTranslationInfo.Update();
 
