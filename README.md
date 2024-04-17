@@ -1,52 +1,91 @@
 # Nittin.Xperience.Localization
 
-[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml)
-
----Remove/replace all lines surrounded by 3 dashes---
+[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml) Localization [![NuGet Package](https://www.nuget.org/packages/Nittin.Localization)]
 
 ## Description
 
----Please put here some general information about your Intergration / App / Solution.---
+This project enables creating and using localizations and translations in Xperience by Kentico project.
+Create translations in Xperience admin UI or programatically and use in your pages.
 
 ## Screenshots
 
----If the integration has Administration UI or an impact on the UX/design of the live site, include some compelling screenshots here---
+![Administration localization edit form](/images/xperience-administration-edit-localization-key.png)
+![Administration translation edit form](/images/xperience-administration-edit-translation.png)
+![Administration key listing page](/images/xperience-administration-key-listing.png)
+![Administration translation listing page](/images/xperience-administration-translation-listing.png)
 
 ## Library Version Matrix
 
----This matrix explains which versions of the library are compatible with different versions of Xperience by Kentico---
-
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 28.2.1         | 1.0.0           |
+| >= 28.4.3         | 1.0.0           |
 
 ### Dependencies
-
----These are all the dependencies required to use (not build) the library---
 
 - [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download)
 - [Xperience by Kentico](https://docs.kentico.com/changelog)
 
 ## Package Installation
 
----This details the steps required to add the library to a solution. This could include multiple packages (NuGet and/or npm)---
-
 Add the package to your application using the .NET CLI
 
 ```powershell
-dotnet add package Nittin.Xperience.Localization
+dotnet add package Nittin.Localization
 ```
 
 ## Quick Start
 
----This section shows how to quickly get started with the library. The minimum number of steps (without all the details) should be listed
-to give a developer a general idea of what is involved---
+1. Add this library to the application services.
 
-## Full Instructions
+   ```csharp
+   // Program.cs
+    builder.Services.AddNittinLocalization();
+   ```
 
----Add the full instructions, guidance, and tips to the Usage-Guide.md file---
+2. Create a localization key in Xperience's Administration within the Localization application added by this library.
+![Administration localization edit form](/images/xperience-administration-edit-localization-key.png)
+3. Create a translation for this key in Xperience's Administration within the Localization application added by this library.
+![Administration translation edit form](/images/xperience-administration-edit-translation.png)
+1. Display the results on your site with a `ViewComponent`.
 
-View the [Usage Guide](./docs/Usage-Guide.md) for more detailed instructions.
+```csharp
+    
+    // ViewModelLocalizedWidgetViewComponent.cs
+    private readonly IKenticoStringLocalizer localizer;
+
+    public ViewModelLocalizedWidgetViewComponent(IKenticoStringLocalizer localizer)
+        => this.localizer = localizer;
+
+    public IViewComponentResult Invoke()
+    {
+        var model = new ViewModelLocalizedWidgetViewModel
+        {
+            Title = localizer["Title"],
+            Content = localizer["Content"]
+        };
+
+        return View("~/Components/Widgets/ViewModelLocalizedWidget/_ViewModelLocalizedWidget.cshtml", model);
+    }
+
+```
+
+![Administration string localizer example](/images/example-localization-string-localized-widget.png)
+
+5. Or display the results on your site with a Razor View 👍
+```html
+
+@using Nittin.Xperience.Localization
+
+@inject IKenticoHtmlLocalizer localizer
+
+<div>
+    <h1>@localizer["Title"]</h1>
+    <p>@localizer["Content"]</p>
+</div>
+
+```
+
+![Administration html localizer example](/images/example-localization-html-localized-widget.png)
 
 ## Contributing
 
