@@ -1,5 +1,7 @@
 ﻿using CMS.ContentEngine;
+
 using Kentico.Xperience.Admin.Base;
+
 using Nittin.Xperience.Localization.Admin.UIPages;
 
 [assembly: UIPage(
@@ -24,9 +26,7 @@ public class LocalizationTranslationListingPage : ListingPage
     {
         PageConfiguration.ColumnConfigurations
             .AddColumn(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemID), "ID", defaultSortDirection: SortTypeEnum.Asc, sortable: true)
-            //.AddColumn(nameof(LocalizationTranslationInfo.LocalizationKey), "Localization Key id", sortable: true)
             .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemName), "LocalizationKey Name", sortable: true)
-            //.AddColumn(nameof(LocalizationTranslationInfo.Language), "Language id", sortable: true)
             .AddColumn(nameof(ContentLanguageInfo.ContentLanguageDisplayName), "Language", sortable: true)
             .AddColumn(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemText), "Translation", sortable: true);
 

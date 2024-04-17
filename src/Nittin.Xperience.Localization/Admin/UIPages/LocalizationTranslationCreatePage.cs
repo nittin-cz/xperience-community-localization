@@ -1,8 +1,10 @@
-﻿using CMS.ContentEngine;
-using CMS.DataEngine;
+﻿using CMS.DataEngine;
+
 using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
+
 using Nittin.Xperience.Localization.Admin.UIPages;
+
 using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
 
 [assembly: UIPage(
@@ -15,11 +17,9 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTranslationConfigurationModel>
+internal class LocalizationTranslationCreatePage : LocalizationTranslationEditPageBase
 {
     private readonly IPageUrlGenerator pageUrlGenerator;
-    private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
-    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
 
     private LocalizationTranslationConfigurationModel? model = null;
 
@@ -27,13 +27,9 @@ internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTra
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
         IPageUrlGenerator pageUrlGenerator,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
-        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : base(formItemCollectionProvider, formDataBinder)
-    {
-        this.pageUrlGenerator = pageUrlGenerator;
-        this.localizationKeyInfoProvider = localizationKeyInfoProvider;
-        this.contentLanguageInfoProvider = contentLanguageInfoProvider;
-    }
+        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider
+    ) : base(formItemCollectionProvider, formDataBinder, localizationTranslationInfoProvider)
+        => this.pageUrlGenerator = pageUrlGenerator;
 
     protected override LocalizationTranslationConfigurationModel Model
     {
@@ -49,7 +45,7 @@ internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTra
     {
         var result = ValidateAndProcess(model);
 
-        if (result == IndexModificationResult.Success)
+        if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
             var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationTranslationListingPage>())
                 .AddSuccessMessage("Translation record created");
@@ -58,37 +54,8 @@ internal class LocalizationTranslationCreatePage : ModelEditPage<LocalizationTra
         }
 
         var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
-            .AddErrorMessage("Could not create Translation.");
+            .AddErrorMessage(result.Message);
 
         return Task.FromResult<ICommandResponse>(errorResponse);
-    }
-
-    protected IndexModificationResult ValidateAndProcess(LocalizationTranslationConfigurationModel configuration)
-    {
-        var localizationKey = localizationKeyInfoProvider
-            .Get()
-            .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyItemName), configuration.LocalizationKeyName)
-            .FirstOrDefault();
-
-        var language = contentLanguageInfoProvider
-            .Get()
-            .WhereEquals(nameof(ContentLanguageInfo.ContentLanguageDisplayName), configuration.LanguageName)
-            .FirstOrDefault();
-
-        if (localizationKey == default || language == default)
-        {
-            return IndexModificationResult.Failure;
-        }
-
-        var localizationTranslationInfo = new LocalizationTranslationItemInfo
-        {
-            LocalizationTranslationItemLocalizationKeyItemId = localizationKey.LocalizationKeyItemId,
-            LocalizationTranslationItemContentLanguageId = language.ContentLanguageID,
-            LocalizationTranslationItemText = configuration.TranslationText
-        };
-
-        localizationTranslationInfo.Insert();
-
-        return IndexModificationResult.Success;
     }
 }

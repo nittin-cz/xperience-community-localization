@@ -1,8 +1,11 @@
 ﻿using CMS.DataEngine;
+
 using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
-using Nittin.Xperience.Localization.Admin.UIPages;
+
 using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
+
+using Nittin.Xperience.Localization.Admin.UIPages;
 
 [assembly: UIPage(
     parentType: typeof(LocalizationKeyListingPage),
@@ -14,7 +17,7 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-internal class LocalizationKeyEditPage : ModelEditPage<LocalizationKeyConfigurationModel>
+internal class LocalizationKeyEditPage : LocalizationKeyEditPageBase
 {
     private readonly IPageUrlGenerator pageUrlGenerator;
     private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
@@ -27,7 +30,7 @@ internal class LocalizationKeyEditPage : ModelEditPage<LocalizationKeyConfigurat
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
         IPageUrlGenerator pageUrlGenerator,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider) : base(formItemCollectionProvider, formDataBinder)
+        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider) : base(formItemCollectionProvider, formDataBinder, localizationKeyInfoProvider)
     {
         this.pageUrlGenerator = pageUrlGenerator;
         this.localizationKeyInfoProvider = localizationKeyInfoProvider;
@@ -54,9 +57,9 @@ internal class LocalizationKeyEditPage : ModelEditPage<LocalizationKeyConfigurat
 
     protected override Task<ICommandResponse> ProcessFormData(LocalizationKeyConfigurationModel model, ICollection<IFormItem> formItems)
     {
-        var result = ValidateAndProcess(model);
+        var result = ValidateAndProcess(model, updateExisting: true);
 
-        if (result == IndexModificationResult.Success)
+        if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
             var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationKeyListingPage>())
                 .AddSuccessMessage("Localization key edited");
@@ -65,21 +68,8 @@ internal class LocalizationKeyEditPage : ModelEditPage<LocalizationKeyConfigurat
         }
 
         var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
-            .AddErrorMessage("Could not edit Localization key.");
+            .AddErrorMessage(result.Message);
 
         return Task.FromResult<ICommandResponse>(errorResponse);
-    }
-
-    protected IndexModificationResult ValidateAndProcess(LocalizationKeyConfigurationModel configuration)
-    {
-        var localizationKeyInfo = localizationKeyInfoProvider.Get().WithID(KeyIdentifier).FirstOrDefault() ??
-            throw new InvalidOperationException("Specified key does not exist");
-
-        localizationKeyInfo.LocalizationKeyItemDescription = configuration.Description;
-        localizationKeyInfo.LocalizationKeyItemName = configuration.Key;
-
-        localizationKeyInfo.Update();
-
-        return IndexModificationResult.Success;
     }
 }

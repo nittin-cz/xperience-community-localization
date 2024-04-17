@@ -16,7 +16,7 @@ internal class LanguageOptionsProvider : IDropDownOptionsProvider
             .GetEnumerableTypedResultAsync())
         .Select(x => new DropDownOptionItem()
         {
-            Value = x.ContentLanguageDisplayName,
+            Value = x.ContentLanguageID.ToString(),
             Text = x.ContentLanguageDisplayName
         });
 }

@@ -8,10 +8,10 @@ public class LocalizationTranslationConfigurationModel
     public int Id { get; set; }
 
     [DropDownComponent(Label = "Translation key", DataProviderType = typeof(TranslationKeyOptionsProvider), Order = 1)]
-    public string LocalizationKeyName { get; set; } = "";
+    public string LocalizationKeyId { get; set; } = "";
 
     [DropDownComponent(Label = "Localized language", DataProviderType = typeof(LanguageOptionsProvider), Order = 2)]
-    public string LanguageName { get; set; } = "";
+    public string LanguageId { get; set; } = "";
 
     [TextAreaComponent(Label = "Translation text", Order = 3)]
     public string TranslationText { get; set; } = "";
@@ -20,12 +20,12 @@ public class LocalizationTranslationConfigurationModel
 
     public LocalizationTranslationConfigurationModel(
         LocalizationTranslationItemInfo localizationTranslation,
-        string languageName,
-        string localizationKeyName
+        string languageId,
+        string localizationKeyId
     )
     {
-        LanguageName = languageName;
-        LocalizationKeyName = localizationKeyName;
+        LanguageId = languageId;
+        LocalizationKeyId = localizationKeyId;
         TranslationText = localizationTranslation.LocalizationTranslationItemText;
     }
 }

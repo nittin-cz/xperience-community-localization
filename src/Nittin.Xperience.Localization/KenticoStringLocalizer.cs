@@ -26,7 +26,5 @@ public class KenticoStringLocalizer : IKenticoStringLocalizer
         var allStrings = localizationService.GetAllValuesForCulture(culture).Select(v => new LocalizedString(v.Key, v.Value, resourceNotFound: false));
         return allStrings;
     }
-
-
 }
 

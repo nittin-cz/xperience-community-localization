@@ -1,7 +1,11 @@
 ﻿using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
-using Nittin.Xperience.Localization.Admin.UIPages;
+
 using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
+
+using Nittin.Xperience.Localization.Admin.UIPages;
+
+using CMS.DataEngine;
 
 [assembly: UIPage(
     parentType: typeof(LocalizationKeyListingPage),
@@ -13,7 +17,7 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-internal class LocalizationKeyCreatePage : ModelEditPage<LocalizationKeyConfigurationModel>
+internal class LocalizationKeyCreatePage : LocalizationKeyEditPageBase
 {
     private readonly IPageUrlGenerator pageUrlGenerator;
     private LocalizationKeyConfigurationModel? model = null;
@@ -21,7 +25,10 @@ internal class LocalizationKeyCreatePage : ModelEditPage<LocalizationKeyConfigur
     public LocalizationKeyCreatePage(
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator) : base(formItemCollectionProvider, formDataBinder) => this.pageUrlGenerator = pageUrlGenerator;
+        IPageUrlGenerator pageUrlGenerator,
+        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider
+    ) : base(formItemCollectionProvider, formDataBinder, localizationKeyInfoProvider)
+        => this.pageUrlGenerator = pageUrlGenerator;
 
     protected override LocalizationKeyConfigurationModel Model
     {
@@ -37,7 +44,7 @@ internal class LocalizationKeyCreatePage : ModelEditPage<LocalizationKeyConfigur
     {
         var result = ValidateAndProcess(model);
 
-        if (result == IndexModificationResult.Success)
+        if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
             var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationKeyListingPage>())
                 .AddSuccessMessage("Localization key created");
@@ -46,21 +53,8 @@ internal class LocalizationKeyCreatePage : ModelEditPage<LocalizationKeyConfigur
         }
 
         var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
-            .AddErrorMessage("Could not create Localization key.");
+            .AddErrorMessage(result.Message);
 
         return Task.FromResult<ICommandResponse>(errorResponse);
-    }
-
-    protected IndexModificationResult ValidateAndProcess(LocalizationKeyConfigurationModel configuration)
-    {
-        var localizationKeyInfo = new LocalizationKeyInfo
-        {
-            LocalizationKeyItemName = configuration.Key,
-            LocalizationKeyItemDescription = configuration.Description
-        };
-
-        localizationKeyInfo.Insert();
-
-        return IndexModificationResult.Success;
     }
 }
