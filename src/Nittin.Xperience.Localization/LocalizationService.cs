@@ -5,7 +5,7 @@ using CMS.DataEngine;
 
 namespace Nittin.Xperience.Localization;
 
-public class LocalizationService
+public class LocalizationService : ILocalizationService
 {
     private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
     private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider;
@@ -27,7 +27,7 @@ public class LocalizationService
 
     public string? GetValueByNameAndCulture(string name, string culture)
     {
-        var language = contentLanguageInfoProvider.Get(culture);
+        var language = contentLanguageInfoProvider.Get().WhereEquals(nameof(ContentLanguageInfo.ContentLanguageCultureFormat), culture).First();
         return GetValueByNameAndLanguage(name, language);
     }
 
@@ -68,7 +68,6 @@ public class LocalizationService
             .GroupBy(i => i.Key!, i => i.TranslationText)
             .ToDictionary(g => g.Key, g => g.First() ?? string.Empty) ?? [];
     }
-
 }
 
 

@@ -21,5 +21,7 @@ public static class NittinLocalizationStartupExtensions
     private static IServiceCollection AddLocalizationServicesInternal(this IServiceCollection services) =>
         services
             .AddSingleton<LocalizationModuleInstaller>()
-            .AddSingleton<LocalizationService, LocalizationService>();
+            .AddSingleton<ILocalizationService, LocalizationService>()
+            .AddSingleton<IKenticoStringLocalizer, KenticoStringLocalizer>()
+            .AddSingleton<IKenticoHtmlLocalizer, KenticoHtmlLocalizer>();
 }

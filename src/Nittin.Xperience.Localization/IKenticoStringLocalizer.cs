@@ -4,5 +4,6 @@ namespace Nittin.Xperience.Localization;
 
 public interface IKenticoStringLocalizer : IStringLocalizer
 {
+
 }
 

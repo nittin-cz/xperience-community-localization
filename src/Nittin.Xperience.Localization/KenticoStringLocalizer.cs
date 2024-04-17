@@ -6,9 +6,9 @@ namespace Nittin.Xperience.Localization;
 
 public class KenticoStringLocalizer : IKenticoStringLocalizer
 {
-    private readonly LocalizationService localizationService;
+    private readonly ILocalizationService localizationService;
 
-    public KenticoStringLocalizer(LocalizationService localizationService) => this.localizationService = localizationService;
+    public KenticoStringLocalizer(ILocalizationService localizationService) => this.localizationService = localizationService;
 
     public LocalizedString this[string name] => new(name, GetStringByName(name) ?? name, resourceNotFound: GetStringByName(name) == null);
 
@@ -27,4 +27,3 @@ public class KenticoStringLocalizer : IKenticoStringLocalizer
         return allStrings;
     }
 }
-

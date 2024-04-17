@@ -29,4 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nittin.Xperience.Localization\Nittin.Xperience.Localization.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\ViewComponents\NewFolder\" />
+  </ItemGroup>
 </Project>

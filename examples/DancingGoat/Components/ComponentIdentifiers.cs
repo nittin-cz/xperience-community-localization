@@ -8,6 +8,7 @@
         // Widgets
         public const string CTA_BUTTON_WIDGET = "DancingGoat.General.CTAButtonWidget";
         public const string TESTIMONIAL_WIDGET = "DancingGoat.LandingPage.TestimonialWidget";
+        public const string TEST_WIDGET = "DancingGoat.LandingPage.TestWidget";
 
         // Sections
         public const string SINGLE_COLUMN_SECTION = "DancingGoat.SingleColumnSection";

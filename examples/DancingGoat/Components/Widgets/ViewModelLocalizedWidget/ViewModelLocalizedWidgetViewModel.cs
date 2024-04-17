@@ -1,6 +1,6 @@
-﻿namespace DancingGoat.Localization;
+﻿namespace DancingGoat.Widgets;
 
-public class DancingGoatLocalizedWidgetViewModel
+public class ViewModelLocalizedWidgetViewModel
 {
     public string Title { get; set; } = "";
     public string Content { get; set; } = "";

@@ -24,6 +24,7 @@ public class LocalizationTranslationConfigurationModel
         string localizationKeyId
     )
     {
+        Id = localizationTranslation.LocalizationTranslationItemID;
         LanguageId = languageId;
         LocalizationKeyId = localizationKeyId;
         TranslationText = localizationTranslation.LocalizationTranslationItemText;
