@@ -1,9 +1,16 @@
 ﻿using CMS.ContentEngine;
+
 using Kentico.Xperience.Admin.Base;
+
 using Nittin.Xperience.Localization.Admin.UIPages;
 
-[assembly: UIPage(typeof(LocalizationApplication), "localization-translations", typeof(LocalizationTranslationListingPage), "Translations",
-    TemplateNames.LISTING, 20)]
+[assembly: UIPage(
+    parentType: typeof(LocalizationApplication),
+    slug: "localization-translations",
+    uiPageType: typeof(LocalizationTranslationListingPage),
+    name: "Translations",
+    templateName: TemplateNames.LISTING,
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
@@ -13,17 +20,15 @@ public class LocalizationTranslationListingPage : ListingPage
     {
     }
 
-    protected override string ObjectType => LocalizationTranslationInfo.OBJECT_TYPE;
+    protected override string ObjectType => LocalizationTranslationItemInfo.OBJECT_TYPE;
 
     public override Task ConfigurePage()
     {
         PageConfiguration.ColumnConfigurations
-            .AddColumn(nameof(LocalizationTranslationInfo.LocalizationTranslationID), "ID", defaultSortDirection: SortTypeEnum.Asc, sortable: true)
-            //.AddColumn(nameof(LocalizationTranslationInfo.LocalizationKey), "Localization Key id", sortable: true)
-            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyName), "LocalizationKey Name", sortable: true)
-            //.AddColumn(nameof(LocalizationTranslationInfo.Language), "Language id", sortable: true)
+            .AddColumn(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemID), "ID", defaultSortDirection: SortTypeEnum.Asc, sortable: true)
+            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemName), "LocalizationKey Name", sortable: true)
             .AddColumn(nameof(ContentLanguageInfo.ContentLanguageDisplayName), "Language", sortable: true)
-            .AddColumn(nameof(LocalizationTranslationInfo.TranslationText), "Translation", sortable: true);
+            .AddColumn(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemText), "Translation", sortable: true);
 
         PageConfiguration.HeaderActions.AddLink<LocalizationTranslationCreatePage>("Create");
         PageConfiguration.AddEditRowAction<LocalizationTranslationEditPage>();
@@ -32,8 +37,12 @@ public class LocalizationTranslationListingPage : ListingPage
         PageConfiguration.QueryModifiers.Add(new QueryModifier((query, settings) =>
         {
             query.Source(s => s
-                .LeftJoin<LocalizationKeyInfo>("Nittinlocalization_LocalizationTranslation.LocalizationKey", "NittinLocalization_LocalizationKey.LocalizationKeyID")
-                .LeftJoin<ContentLanguageInfo>("Nittinlocalization_LocalizationTranslation.Language", "CMS_ContentLanguage.ContentLanguageID")
+                .LeftJoin<LocalizationKeyInfo>(
+                    $"{LocalizationTranslationItemInfo.OBJECT_TYPE.Replace('.', '_')}.{nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemLocalizationKeyItemId)}",
+                    nameof(LocalizationKeyInfo.LocalizationKeyItemId))
+                .LeftJoin<ContentLanguageInfo>(
+                    $"{LocalizationTranslationItemInfo.OBJECT_TYPE.Replace('.', '_')}.{nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemContentLanguageId)}",
+                    nameof(ContentLanguageInfo.ContentLanguageID))
             );
             return query;
         }));

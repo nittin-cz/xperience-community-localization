@@ -1,33 +1,60 @@
 ﻿using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
+
+using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
+
 using Nittin.Xperience.Localization.Admin.UIPages;
 
-[assembly: UIPage(typeof(LocalizationKeyListingPage), "create", typeof(LocalizationKeyCreatePage), "Create a localization key",
-    TemplateNames.EDIT, 1)]
+using CMS.DataEngine;
+
+[assembly: UIPage(
+    parentType: typeof(LocalizationKeyListingPage),
+    slug: "create",
+    uiPageType: typeof(LocalizationKeyCreatePage),
+    name: "Create a localization key",
+    templateName: TemplateNames.EDIT,
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-public class LocalizationKeyCreatePage : CreatePage<LocalizationKeyInfo, LocalizationKeyListingPage>
+internal class LocalizationKeyCreatePage : LocalizationKeyEditPageBase
 {
-    public LocalizationKeyCreatePage(IFormComponentMapper formComponentMapper, IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator) : base(formComponentMapper, formDataBinder, pageUrlGenerator)
+    private readonly IPageUrlGenerator pageUrlGenerator;
+    private LocalizationKeyConfigurationModel? model = null;
+
+    public LocalizationKeyCreatePage(
+        IFormItemCollectionProvider formItemCollectionProvider,
+        IFormDataBinder formDataBinder,
+        IPageUrlGenerator pageUrlGenerator,
+        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider
+    ) : base(formItemCollectionProvider, formDataBinder, localizationKeyInfoProvider)
+        => this.pageUrlGenerator = pageUrlGenerator;
+
+    protected override LocalizationKeyConfigurationModel Model
     {
+        get
+        {
+            model ??= new();
+
+            return model;
+        }
     }
 
-    public override Task ConfigurePage()
+    protected override Task<ICommandResponse> ProcessFormData(LocalizationKeyConfigurationModel model, ICollection<IFormItem> formItems)
     {
-        PageConfiguration.UIFormName = "LocalizationKeyEdit";
+        var result = ValidateAndProcess(model);
 
-        return base.ConfigurePage();
-    }
+        if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
+        {
+            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationKeyListingPage>())
+                .AddSuccessMessage("Localization key created");
 
-    protected override Task<ICommandResponse> GetSubmitSuccessResponse(LocalizationKeyInfo savedInfoObject, ICollection<IFormItem> items) => Task.FromResult(
-            (ICommandResponse)NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationKeyListingPage>())
-                .AddSuccessMessage("Localization key created"));
+            return Task.FromResult<ICommandResponse>(successResponse);
+        }
 
-    protected override Task SetFormData(LocalizationKeyInfo infoObject, IFormFieldValueProvider fieldValueProvider)
-    {
-        infoObject.LocalizationKeyGuid = Guid.NewGuid();
-        return base.SetFormData(infoObject, fieldValueProvider);
+        var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
+            .AddErrorMessage(result.Message);
+
+        return Task.FromResult<ICommandResponse>(errorResponse);
     }
 }

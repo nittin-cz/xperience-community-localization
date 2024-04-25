@@ -1,13 +1,14 @@
-using Microsoft.Extensions.Localization;
 using System.Globalization;
+
+using Microsoft.Extensions.Localization;
 
 namespace Nittin.Xperience.Localization;
 
 public class KenticoStringLocalizer : IKenticoStringLocalizer
 {
-    private readonly LocalizationService localizationService;
+    private readonly ILocalizationService localizationService;
 
-    public KenticoStringLocalizer(LocalizationService localizationService) => this.localizationService = localizationService;
+    public KenticoStringLocalizer(ILocalizationService localizationService) => this.localizationService = localizationService;
 
     public LocalizedString this[string name] => new(name, GetStringByName(name) ?? name, resourceNotFound: GetStringByName(name) == null);
 
@@ -25,7 +26,4 @@ public class KenticoStringLocalizer : IKenticoStringLocalizer
         var allStrings = localizationService.GetAllValuesForCulture(culture).Select(v => new LocalizedString(v.Key, v.Value, resourceNotFound: false));
         return allStrings;
     }
-
-
 }
-

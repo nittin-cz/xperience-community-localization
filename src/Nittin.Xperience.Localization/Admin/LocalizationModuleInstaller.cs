@@ -7,9 +7,9 @@ namespace Nittin.Xperience.Localization.Admin;
 
 internal class LocalizationModuleInstaller
 {
-    private readonly IResourceInfoProvider resourceProvider;
+    private readonly IInfoProvider<ResourceInfo> resourceProvider;
 
-    public LocalizationModuleInstaller(IResourceInfoProvider resourceProvider) => this.resourceProvider = resourceProvider;
+    public LocalizationModuleInstaller(IInfoProvider<ResourceInfo> resourceProvider) => this.resourceProvider = resourceProvider;
 
     public void Install()
     {
@@ -45,11 +45,11 @@ internal class LocalizationModuleInstaller
         info.ClassType = ClassType.OTHER;
         info.ClassResourceID = resource.ResourceID;
 
-        var formInfo = FormHelper.GetBasicFormDefinition(nameof(LocalizationKeyInfo.LocalizationKeyID));
+        var formInfo = FormHelper.GetBasicFormDefinition(nameof(LocalizationKeyInfo.LocalizationKeyItemId));
 
         var formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationKeyInfo.LocalizationKeyGuid),
+            Name = nameof(LocalizationKeyInfo.LocalizationKeyItemGuid),
             AllowEmpty = false,
             Visible = true,
             Precision = 0,
@@ -60,7 +60,7 @@ internal class LocalizationModuleInstaller
 
         formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationKeyInfo.LocalizationKeyName),
+            Name = nameof(LocalizationKeyInfo.LocalizationKeyItemName),
             AllowEmpty = false,
             Visible = true,
             Precision = 0,
@@ -72,7 +72,7 @@ internal class LocalizationModuleInstaller
 
         formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationKeyInfo.Description),
+            Name = nameof(LocalizationKeyInfo.LocalizationKeyItemDescription),
             AllowEmpty = true,
             Visible = true,
             Precision = 0,
@@ -91,19 +91,19 @@ internal class LocalizationModuleInstaller
 
     public void InstallLocalizationTranslationInfo(ResourceInfo resource)
     {
-        var info = DataClassInfoProvider.GetDataClassInfo(LocalizationTranslationInfo.OBJECT_TYPE) ?? DataClassInfo.New(LocalizationTranslationInfo.OBJECT_TYPE);
+        var info = DataClassInfoProvider.GetDataClassInfo(LocalizationTranslationItemInfo.OBJECT_TYPE) ?? DataClassInfo.New(LocalizationTranslationItemInfo.OBJECT_TYPE);
 
-        info.ClassName = LocalizationTranslationInfo.TYPEINFO.ObjectClassName;
-        info.ClassTableName = LocalizationTranslationInfo.TYPEINFO.ObjectClassName.Replace(".", "_");
+        info.ClassName = LocalizationTranslationItemInfo.TYPEINFO.ObjectClassName;
+        info.ClassTableName = LocalizationTranslationItemInfo.TYPEINFO.ObjectClassName.Replace(".", "_");
         info.ClassDisplayName = "Localization Translation";
         info.ClassType = ClassType.OTHER;
         info.ClassResourceID = resource.ResourceID;
 
-        var formInfo = FormHelper.GetBasicFormDefinition(nameof(LocalizationTranslationInfo.LocalizationTranslationID));
+        var formInfo = FormHelper.GetBasicFormDefinition(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemID));
 
         var formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationTranslationInfo.LocalizationTranslationGuid),
+            Name = nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemGuid),
             AllowEmpty = false,
             Visible = true,
             Precision = 0,
@@ -114,7 +114,7 @@ internal class LocalizationModuleInstaller
 
         formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationTranslationInfo.LocalizationKey),
+            Name = nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemLocalizationKeyItemId),
             AllowEmpty = false,
             Visible = true,
             Precision = 0,
@@ -126,7 +126,7 @@ internal class LocalizationModuleInstaller
 
         formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationTranslationInfo.Language),
+            Name = nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemContentLanguageId),
             AllowEmpty = false,
             Visible = true,
             Precision = 0,
@@ -138,7 +138,7 @@ internal class LocalizationModuleInstaller
 
         formItem = new FormFieldInfo
         {
-            Name = nameof(LocalizationTranslationInfo.TranslationText),
+            Name = nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemText),
             AllowEmpty = true,
             Visible = true,
             Precision = 0,
