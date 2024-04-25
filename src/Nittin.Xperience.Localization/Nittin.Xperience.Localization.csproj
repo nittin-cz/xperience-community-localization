@@ -27,7 +27,7 @@
 	<ItemGroup>
       <PackageReference Include="Kentico.Xperience.Admin" />
       <PackageReference Include="Kentico.Xperience.Core" />
-      <PackageReference Include="Kentico.Xperience.WebApp"  />
+      <PackageReference Include="Kentico.Xperience.WebApp" />
     </ItemGroup>
 
 </Project>

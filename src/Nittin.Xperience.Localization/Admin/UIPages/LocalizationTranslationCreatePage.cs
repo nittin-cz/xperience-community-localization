@@ -1,36 +1,61 @@
-﻿using Kentico.Xperience.Admin.Base;
+﻿using CMS.DataEngine;
+
+using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
+
 using Nittin.Xperience.Localization.Admin.UIPages;
 
-[assembly: UIPage(typeof(LocalizationTranslationListingPage), "create", typeof(LocalizationTranslationCreatePage),
-    "Create a localization key",
-    TemplateNames.EDIT, 1)]
+using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
+
+[assembly: UIPage(
+    parentType: typeof(LocalizationTranslationListingPage),
+    slug: "create",
+    uiPageType: typeof(LocalizationTranslationCreatePage),
+    name: "Create a translation",
+    templateName: TemplateNames.EDIT,
+    order: UIPageOrder.NoOrder)]
 
 namespace Nittin.Xperience.Localization.Admin.UIPages;
 
-public class
-    LocalizationTranslationCreatePage : CreatePage<LocalizationTranslationInfo, LocalizationTranslationListingPage>
+internal class LocalizationTranslationCreatePage : LocalizationTranslationEditPageBase
 {
-    public LocalizationTranslationCreatePage(IFormComponentMapper formComponentMapper, IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator) : base(formComponentMapper, formDataBinder, pageUrlGenerator)
+    private readonly IPageUrlGenerator pageUrlGenerator;
+
+    private LocalizationTranslationConfigurationModel? model = null;
+
+    public LocalizationTranslationCreatePage(
+        IFormItemCollectionProvider formItemCollectionProvider,
+        IFormDataBinder formDataBinder,
+        IPageUrlGenerator pageUrlGenerator,
+        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider
+    ) : base(formItemCollectionProvider, formDataBinder, localizationTranslationInfoProvider)
+        => this.pageUrlGenerator = pageUrlGenerator;
+
+    protected override LocalizationTranslationConfigurationModel Model
     {
+        get
+        {
+            model ??= new();
+
+            return model;
+        }
     }
-    public override Task ConfigurePage()
+
+    protected override Task<ICommandResponse> ProcessFormData(LocalizationTranslationConfigurationModel model, ICollection<IFormItem> formItems)
     {
-        PageConfiguration.UIFormName = "LocalizationTranslationCreate";
+        var result = ValidateAndProcess(model);
 
-        return base.ConfigurePage();
-    }
+        if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
+        {
+            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationTranslationListingPage>())
+                .AddSuccessMessage("Translation record created");
 
-    protected override Task<ICommandResponse> GetSubmitSuccessResponse(LocalizationTranslationInfo savedInfoObject,
-        ICollection<IFormItem> items) => Task.FromResult(
-        (ICommandResponse)NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationTranslationListingPage>())
-            .AddSuccessMessage("Localization key created"));
+            return Task.FromResult<ICommandResponse>(successResponse);
+        }
 
-    protected override Task SetFormData(LocalizationTranslationInfo infoObject,
-        IFormFieldValueProvider fieldValueProvider)
-    {
-        infoObject.LocalizationTranslationGuid = Guid.NewGuid();
-        return base.SetFormData(infoObject, fieldValueProvider);
+        var errorResponse = ResponseFrom(new FormSubmissionResult(FormSubmissionStatus.ValidationFailure))
+            .AddErrorMessage(result.Message);
+
+        return Task.FromResult<ICommandResponse>(errorResponse);
     }
 }
