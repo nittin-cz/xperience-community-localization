@@ -42,5 +42,5 @@ jobs:
 
       - name: Publish the package
         run: |
-          # dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "${{ env.REGISTRY }}"
-          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
+          dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NUGET_API_KEY }} --source "${{ env.REGISTRY }}"
+          #dotnet nuget push "src/Nittin.Xperience.Localization/bin/Release/${{ env.NAME }}.${{ steps.version.outputs.version }}.nupkg"  --api-key ${{ secrets.NITTIN_CI_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}"
