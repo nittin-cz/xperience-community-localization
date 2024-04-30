@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>DancingGoat</RootNamespace>
-    <UserSecretsId>79c858af-5444-4954-8d08-6592a961e82a</UserSecretsId>
+    <UserSecretsId>79c858af-5444-4954-8d08-6592k961e82a</UserSecretsId>
     <SeparatedAdmin Condition="'$(SeparatedAdmin)' == ''">false</SeparatedAdmin>
   </PropertyGroup>
   <ItemGroup>
