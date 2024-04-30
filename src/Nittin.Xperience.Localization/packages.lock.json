@@ -4,21 +4,21 @@
     "net6.0": {
       "Kentico.Xperience.Admin": {
         "type": "Direct",
-        "requested": "[29.0.0, )",
-        "resolved": "29.0.0",
-        "contentHash": "0PZqIlNEjpE5GHPtTMHzd5KkO428oRJlYEDx2YmLLYkm+UDMsRIwaS91UtmZTP5FYlDzv7yq0zgB4hqbcdsZTA==",
+        "requested": "[29.0.1, )",
+        "resolved": "29.0.1",
+        "contentHash": "cd/GW+R/BG+S941TD2SVFqxqRtJ58qEirqDT5LAefqj11QcFgxlYIU5HdT+0nvVfiAQoGhhHyUVrLVcfBmIarg==",
         "dependencies": {
           "Kentico.Aira.Client": "1.0.25",
-          "Kentico.Xperience.WebApp": "[29.0.0]",
+          "Kentico.Xperience.WebApp": "[29.0.1]",
           "Microsoft.AspNetCore.SpaServices.Extensions": "6.0.29",
           "Microsoft.Extensions.FileProviders.Embedded": "6.0.29"
         }
       },
       "Kentico.Xperience.Core": {
         "type": "Direct",
-        "requested": "[29.0.0, )",
-        "resolved": "29.0.0",
-        "contentHash": "jG0gkDLE4H7ZNEdxdyZEzPxoAMlfx24oVdPeRa8RCUriOhBtleNREInbR9kYoMWwo456EaUaf3RPngArmZdy1g==",
+        "requested": "[29.0.1, )",
+        "resolved": "29.0.1",
+        "contentHash": "QMmB5YGxAgIgYyGa21v0M40QJgqyWxGBLq6rjU483XhEPL1f4rhGW81XEU4kw/REBdCoH46LJT3/ATW/7pYBFA==",
         "dependencies": {
           "AngleSharp": "0.17.1",
           "MailKit": "4.5.0",
@@ -38,15 +38,15 @@
       },
       "Kentico.Xperience.WebApp": {
         "type": "Direct",
-        "requested": "[29.0.0, )",
-        "resolved": "29.0.0",
-        "contentHash": "LXTK6WPoEThc+K2cSGa3GbKg1Zute0tjELazK6JURnGEF7xdoRiVE8ty6WeWFxmK6Cd+FwId10Q49C6SXlLL2A==",
+        "requested": "[29.0.1, )",
+        "resolved": "29.0.1",
+        "contentHash": "9TwUaSs+WMGCk2rlgyk0kpqSyGvJRMzcAr2rCtuEH7su+QOUk+kKY65s0DZ33JTyA1QrCYOst9O/vrL4/Endtg==",
         "dependencies": {
           "CommandLineParser": "2.9.1",
           "HotChocolate.AspNetCore": "13.9.0",
           "HotChocolate.Data": "13.9.0",
           "HtmlSanitizer": "8.0.843",
-          "Kentico.Xperience.Core": "[29.0.0]",
+          "Kentico.Xperience.Core": "[29.0.1]",
           "Microsoft.Extensions.Caching.Memory": "6.0.1",
           "Microsoft.Extensions.FileProviders.Embedded": "6.0.29",
           "Microsoft.Extensions.Localization": "6.0.29"
