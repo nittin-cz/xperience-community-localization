@@ -1,6 +1,6 @@
 # Nittin.Xperience.Localization
 
-[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml) Localization [![NuGet Package](https://www.nuget.org/packages/Nittin.Localization)]
+[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml) Localization [![NuGet Package](https://www.nuget.org/packages/nittin.xperience.localization)]
 
 ## Description
 
