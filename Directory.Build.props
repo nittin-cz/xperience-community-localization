@@ -5,7 +5,7 @@
     <Authors>$(Company)</Authors>
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
     <Trademark>$(Company)™</Trademark>
-    <VersionPrefix>1.0.2</VersionPrefix>
+    <VersionPrefix>1.0.4</VersionPrefix>
     <VersionSuffix>prerelease-1</VersionSuffix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
