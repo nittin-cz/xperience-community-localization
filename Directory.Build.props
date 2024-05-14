@@ -6,7 +6,6 @@
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
     <Trademark>$(Company)™</Trademark>
     <VersionPrefix>1.0.5</VersionPrefix>
-    <VersionSuffix>prerelease-1</VersionSuffix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <PackageProjectUrl>https://github.com/nittin-cz/xperience-community-localization</PackageProjectUrl>
