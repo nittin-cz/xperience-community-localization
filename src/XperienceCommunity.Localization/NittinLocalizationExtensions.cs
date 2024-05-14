@@ -10,7 +10,7 @@ public static class NittinLocalizationStartupExtensions
     /// </summary>
     /// <param name="serviceCollection"></param>
     /// <returns></returns>
-    public static IServiceCollection AddNittinLocalization(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddXperienceCommunityLocalization(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddLocalizationServicesInternal();
 

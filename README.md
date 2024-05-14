@@ -39,7 +39,7 @@ dotnet add package XperienceCommunity.Localization
 
    ```csharp
    // Program.cs
-    builder.Services.AddNittinLocalization();
+    builder.Services.AddXperienceCommunityLocalization();
    ```
 
 2. Create a localization key in Xperience's Administration within the Localization application added by this library.
