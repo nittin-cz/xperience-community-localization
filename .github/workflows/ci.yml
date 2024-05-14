@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: https://api.nuget.org/v3/index.json
-  NAME: xperience-community-localization
+  NAME: XperienceCommunity.Localization
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   VERSION:
 
