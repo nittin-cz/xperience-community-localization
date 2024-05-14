@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Product>Nittin - Xperience by Kentico Localization</Product>
+		<Title>$(Product)</Title>
+		<PackageId>XperienceCommunity.Localization</PackageId>
+		<Description>Enables localization.</Description>
+		<RepositoryUrl>https://github.com/nittin-cz/xperience-community-localization</RepositoryUrl>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AdminOrgName>nittin</AdminOrgName>
+		<RootNamespace>XperienceCommunity.Localization</RootNamespace>
+		<NoWarn>$(NoWarn);S1075</NoWarn>
+		<LangVersion>latest</LangVersion>
+
+		<!-- Required to prevent type conflicts with existing types -->
+		<HotChocolateImplicitUsings>disable</HotChocolateImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="CMS.AssemblyDiscoverableAttribute">
+		</AssemblyAttribute>
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+      <PackageReference Include="Kentico.Xperience.Admin" />
+      <PackageReference Include="Kentico.Xperience.Core" />
+      <PackageReference Include="Kentico.Xperience.WebApp" />
+    </ItemGroup>
+
+</Project>
