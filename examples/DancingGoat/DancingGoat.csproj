@@ -27,9 +27,9 @@
     <PackageReference Include="kentico.xperience.webapp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nittin.Xperience.Localization\Nittin.Xperience.Localization.csproj" />
+    <Folder Include="Components\ViewComponents\NewFolder\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\ViewComponents\NewFolder\" />
+    <ProjectReference Include="..\..\src\XperienceCommunity.Localization\XperienceCommunity.Localization.csproj" />
   </ItemGroup>
 </Project>

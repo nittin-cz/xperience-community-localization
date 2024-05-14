@@ -956,7 +956,7 @@
           "System.IO.Hashing": "7.0.0"
         }
       },
-      "nittin.xperience.localization": {
+      "xperiencecommunity.localization": {
         "type": "Project",
         "dependencies": {
           "Kentico.Xperience.Admin": "[29.0.1, )",

@@ -2,7 +2,7 @@
 
 using Kentico.PageBuilder.Web.Mvc;
 
-using Nittin.Xperience.Localization;
+using XperienceCommunity.Localization;
 
 using DancingGoat.Widgets;
 

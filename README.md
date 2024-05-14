@@ -1,6 +1,6 @@
-# Nittin.Xperience.Localization
+# XperienceCommunity.Localization
 
-[![CI: Build and Test](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/Nittin.Xperience.Localization/actions/workflows/ci.yml) Localization [![NuGet Package](https://img.shields.io/nuget/v/nittin.xperience.localization.svg)](https://www.nuget.org/packages/nittin.xperience.localization)
+[![CI: Build and Test](https://github.com/nittin-cz/xperience-community-localization/actions/workflows/ci.yml/badge.svg)](https://github.com/nittin-cz/xperience-community-localization/actions/workflows/ci.yml) Localization [![NuGet Package](https://img.shields.io/nuget/v/XperienceCommunity.Localization.svg)](https://www.nuget.org/packages/XperienceCommunity.Localization)
 
 ## Description
 
@@ -30,7 +30,7 @@ Create translations in Xperience admin UI or programatically and use in your pag
 Add the package to your application using the .NET CLI
 
 ```powershell
-dotnet add package Nittin.Localization
+dotnet add package XperienceCommunity.Localization
 ```
 
 ## Quick Start
@@ -74,7 +74,7 @@ dotnet add package Nittin.Localization
 5. Or display the results on your site with a Razor View 👍
 ```html
 
-@using Nittin.Xperience.Localization
+@using XperienceCommunity.Localization
 
 @inject IKenticoHtmlLocalizer localizer
 
