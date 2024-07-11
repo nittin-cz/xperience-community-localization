@@ -85,6 +85,35 @@ dotnet add package XperienceCommunity.Localization
 
 ![Administration html localizer example](/images/example-localization-html-localized-widget.png)
 
+## Customization
+Administration does not allow for storing empty string values as the translations. By default, if a specified key in a specified language does not exist the name of the key is returned.
+
+You can override this functionality by specifying your own implmentation of `IKenticoHtmlLocalizer` and `IKenticoStringLocalizer`. Default implementations are the `KenticoHtmlLocalizer` and the `KenticoStringLocalizer`.
+
+This can be useful if you want to display a value in one language and display nothing in a different language.
+To achieve this, you can inherit the `KenticoHtmlLocalizer` or the `KenticoStringLocalizer`.
+
+```csharp
+public class ExampleHtmlLocalizer : KenticoHtmlLocalizer
+{
+    public override string? GetStringByName(string name)
+    {
+        string culture = CultureInfo.CurrentCulture.ToString();
+
+        // return empty string instead of null.
+        return localizationService.GetValueByNameAndCulture(name, culture) ?? string.Empty;
+    }
+}
+```
+
+Similarly implement the `IKenticoStringLocalizer`, or use the default `KenticoStringLocalizer`
+
+```csharp
+// In your Program.cs
+// ... Other registrations
+builder.Services.AddXperienceCommunityLocalization<ExampleHtmlLocalizer, KenticoStringLocalizer>();
+```
+
 ## Contributing
 
 Instructions and technical details for contributing to **this** project can be found in [Contributing Setup](./docs/Contributing-Setup.md).
