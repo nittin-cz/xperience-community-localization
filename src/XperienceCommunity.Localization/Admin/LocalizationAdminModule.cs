@@ -22,7 +22,7 @@ internal class LocalizationAdminModule : AdminModule
     {
         base.OnInit(parameters);
 
-        // RegisterClientModule("nittin", "xperience-localization");
+        RegisterClientModule("nittin", "xperience-community-localization");
 
         var services = parameters.Services;
 

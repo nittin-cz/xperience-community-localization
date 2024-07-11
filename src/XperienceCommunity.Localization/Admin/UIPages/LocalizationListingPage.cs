@@ -3,16 +3,16 @@
 using XperienceCommunity.Localization.Admin.UIPages;
 
 [assembly: UIPage(
-    parentType: typeof(LocalizationApplication),
-    slug: "localization-keys",
-    uiPageType: typeof(LocalizationKeyListingPage),
-    name: "Localization keys",
+    parentType: typeof(LocalizationApplicationPage),
+    slug: "localizations",
+    uiPageType: typeof(LocalizationListingPage),
+    name: "Localizations",
     templateName: TemplateNames.LISTING,
     order: UIPageOrder.NoOrder)]
 
 namespace XperienceCommunity.Localization.Admin.UIPages;
 
-public class LocalizationKeyListingPage : ListingPage
+public class LocalizationListingPage : ListingPage
 {
     protected override string ObjectType => LocalizationKeyInfo.OBJECT_TYPE;
 
@@ -20,10 +20,11 @@ public class LocalizationKeyListingPage : ListingPage
     {
         PageConfiguration.ColumnConfigurations
             .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemId), "ID")
-        .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemName), "Name");
+            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemName), "Name")
+            .AddColumn(nameof(LocalizationKeyInfo.LocalizationKeyItemDescription), "Description");
 
-        PageConfiguration.HeaderActions.AddLink<LocalizationKeyCreatePage>("Create");
-        PageConfiguration.AddEditRowAction<LocalizationKeyEditPage>();
+        PageConfiguration.HeaderActions.AddLink<LocalizationCreatePage>("Create");
+        PageConfiguration.AddEditRowAction<LocalizationEditPage>();
         PageConfiguration.TableActions.AddDeleteAction("Delete");
 
         return base.ConfigurePage();
@@ -32,4 +33,3 @@ public class LocalizationKeyListingPage : ListingPage
     [PageCommand]
     public override Task<ICommandResponse<RowActionResult>> Delete(int id) => base.Delete(id);
 }
-

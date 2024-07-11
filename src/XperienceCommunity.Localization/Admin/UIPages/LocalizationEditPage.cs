@@ -6,44 +6,56 @@ using Kentico.Xperience.Admin.Base.Forms;
 using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
 
 using XperienceCommunity.Localization.Admin.UIPages;
+using CMS.ContentEngine;
 
 [assembly: UIPage(
-    parentType: typeof(LocalizationKeyListingPage),
+    parentType: typeof(LocalizationListingPage),
     slug: PageParameterConstants.PARAMETERIZED_SLUG,
-    uiPageType: typeof(LocalizationKeyEditPage),
-    name: "Edit localization key",
+    uiPageType: typeof(LocalizationEditPage),
+    name: "Edit localization",
     templateName: TemplateNames.EDIT,
     order: 1)]
 
 namespace XperienceCommunity.Localization.Admin.UIPages;
 
-internal class LocalizationKeyEditPage : LocalizationKeyEditPageBase
+internal class LocalizationEditPage : LocalizationEditPageBase
 {
     private readonly IPageUrlGenerator pageUrlGenerator;
     private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
-    private LocalizationKeyConfigurationModel? model = null;
+    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
+    private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider;
+    private LocalizationConfigurationModel? model = null;
 
     [PageParameter(typeof(IntPageModelBinder))]
     public int KeyIdentifier { get; set; }
 
-    public LocalizationKeyEditPage(
+    public LocalizationEditPage(
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
         IPageUrlGenerator pageUrlGenerator,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider) : base(formItemCollectionProvider, formDataBinder, localizationKeyInfoProvider)
+        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
+        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
+        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider) :
+            base(formItemCollectionProvider,
+                formDataBinder,
+                localizationKeyInfoProvider,
+                localizationTranslationItemInfoProvider)
     {
         this.pageUrlGenerator = pageUrlGenerator;
+        this.contentLanguageInfoProvider = contentLanguageInfoProvider;
         this.localizationKeyInfoProvider = localizationKeyInfoProvider;
+        this.localizationTranslationItemInfoProvider = localizationTranslationItemInfoProvider;
     }
 
-    protected override LocalizationKeyConfigurationModel Model
+    protected override LocalizationConfigurationModel Model
     {
         get
         {
-            model ??= new LocalizationKeyConfigurationModel(
-                localizationKeyInfoProvider.Get().WithID(KeyIdentifier).FirstOrDefault() ??
-                    throw new InvalidOperationException("Specified key does not exist")
-                );
+            model ??= new LocalizationConfigurationModel(
+                localizationKeyInfoProvider.Get().WithID(KeyIdentifier).FirstOrDefault() ?? throw new InvalidOperationException("Specified key does not exist"),
+                localizationTranslationItemInfoProvider.Get().GetEnumerableTypedResult(),
+                contentLanguageInfoProvider.Get().GetEnumerableTypedResult()
+            );
 
             return model;
         }
@@ -55,13 +67,13 @@ internal class LocalizationKeyEditPage : LocalizationKeyEditPageBase
         return base.ConfigurePage();
     }
 
-    protected override Task<ICommandResponse> ProcessFormData(LocalizationKeyConfigurationModel model, ICollection<IFormItem> formItems)
+    protected override Task<ICommandResponse> ProcessFormData(LocalizationConfigurationModel model, ICollection<IFormItem> formItems)
     {
         var result = ValidateAndProcess(model, updateExisting: true);
 
         if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
-            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationKeyListingPage>())
+            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationListingPage>())
                 .AddSuccessMessage("Localization key edited");
 
             return Task.FromResult<ICommandResponse>(successResponse);
