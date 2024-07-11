@@ -18,7 +18,7 @@ public class LocalizationConfigurationComponentProperties : FormComponentPropert
 
 public class LocalizationConfigurationComponentClientProperties : FormComponentClientProperties<IEnumerable<LocalizationTranslationModel>>
 {
-    public string Vall { get; set; } = string.Empty;
+   
 }
 
 public sealed class LocalizationConfigurationComponentAttribute : FormComponentAttribute

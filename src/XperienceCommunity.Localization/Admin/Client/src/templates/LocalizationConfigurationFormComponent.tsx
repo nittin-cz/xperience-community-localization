@@ -16,7 +16,6 @@ export interface LocalizationTranslationModel {
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface LocalizationConfigurationComponentClientProperties {
     value: LocalizationTranslationModel[];
-    vall: string;
     onChange: (value: LocalizationTranslationModel[]) => void;
 }
 
