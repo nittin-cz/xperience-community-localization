@@ -1,32 +1,50 @@
-﻿using Kentico.Xperience.Admin.Base.FormAnnotations;
-using XperienceCommunity.Localization.Admin.Providers;
+﻿using CMS.ContentEngine;
+using Kentico.Forms.Web.Mvc;
+using Kentico.Xperience.Admin.Base.FormAnnotations;
+using XperienceCommunity.Localization.Admin.Components;
 
 namespace XperienceCommunity.Localization.Admin;
 
-public class LocalizationTranslationConfigurationModel
+public class LocalizationConfigurationModel
 {
-    public int Id { get; set; }
+    public int KeyId { get; set; }
+     
+    [TextInputComponent(Label = "Key", Order = 1)]
+    [RequiredValidationRule]
+    [MinLengthValidationRule(1)]
+    public string KeyName { get; set; } = string.Empty;
 
-    [DropDownComponent(Label = "Translation key", DataProviderType = typeof(TranslationKeyOptionsProvider), Order = 1)]
-    public string LocalizationKeyId { get; set; } = "";
+    [TextAreaComponent(Label = "Description", Order = 2)]
+    public string Description { get; set; } = string.Empty;
 
-    [DropDownComponent(Label = "Localized language", DataProviderType = typeof(LanguageOptionsProvider), Order = 2)]
-    public string LanguageId { get; set; } = "";
+    [LocalizationConfigurationComponent(Label = "Translations", Order = 3)]
+    public IEnumerable<LocalizationTranslationModel> Translations { get; set; } = [];
 
-    [TextAreaComponent(Label = "Translation text", Order = 3)]
-    public string TranslationText { get; set; } = "";
+    public LocalizationConfigurationModel() { }
 
-    public LocalizationTranslationConfigurationModel() { }
+    public LocalizationConfigurationModel(IEnumerable<ContentLanguageInfo> allLanguages)
+        => Translations = allLanguages.Select(LocalizationTranslationModel.New).ToList();
 
-    public LocalizationTranslationConfigurationModel(
-        LocalizationTranslationItemInfo localizationTranslation,
-        string languageId,
-        string localizationKeyId
-    )
+    public LocalizationConfigurationModel(LocalizationKeyInfo keyInfo,
+        IEnumerable<LocalizationTranslationItemInfo> translations,
+        IEnumerable<ContentLanguageInfo> allLanguages)
     {
-        Id = localizationTranslation.LocalizationTranslationItemID;
-        LanguageId = languageId;
-        LocalizationKeyId = localizationKeyId;
-        TranslationText = localizationTranslation.LocalizationTranslationItemText;
+        KeyId = keyInfo.LocalizationKeyItemId;
+        KeyName = keyInfo.LocalizationKeyItemName;
+        Description = keyInfo.LocalizationKeyItemDescription;
+
+        var allTranslations = translations
+            .Where(x => x.LocalizationTranslationItemLocalizationKeyItemId == keyInfo.LocalizationKeyItemId)
+            .Select(x => new LocalizationTranslationModel(x, allLanguages))
+            .ToList();
+
+        var languagesWithoutExistingTranslations = allLanguages.Where(x => !allTranslations.Any(y => y.LanguageId == x.ContentLanguageID.ToString()));
+
+        foreach (var language in languagesWithoutExistingTranslations)
+        {
+            allTranslations.Add(LocalizationTranslationModel.New(language));
+        }
+
+        Translations = allTranslations;
     }
 }
