@@ -10,14 +10,13 @@ Create translations in Xperience admin UI or programatically and use in your pag
 ## Screenshots
 
 ![Administration localization edit form](/images/xperience-administration-edit-localization-key.png)
-![Administration translation edit form](/images/xperience-administration-edit-translation.png)
 ![Administration key listing page](/images/xperience-administration-key-listing.png)
-![Administration translation listing page](/images/xperience-administration-translation-listing.png)
 
 ## Library Version Matrix
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
+| >= 29.2.0         | >= 1.2.0        |
 | >= 28.4.3         | 1.0.0           |
 
 ### Dependencies
@@ -41,12 +40,11 @@ dotnet add package XperienceCommunity.Localization
    // Program.cs
     builder.Services.AddXperienceCommunityLocalization();
    ```
-
-2. Create a localization key in Xperience's Administration within the Localization application added by this library.
-![Administration localization edit form](/images/xperience-administration-edit-localization-key.png)
-3. Create a translation for this key in Xperience's Administration within the Localization application added by this library.
-![Administration translation edit form](/images/xperience-administration-edit-translation.png)
-1. Display the results on your site with a `ViewComponent`.
+2. Open the Localization application added by this library in the Xperience's Administration.
+3. Press Create to add a localization.
+4. Fill out the key and the description of the localized content.
+5. Add translations for the desired content languages. ![Administration localization edit form](/images/xperience-administration-edit-localization-key.png)
+6. Display the results on your site with a `ViewComponent`.
 
 ```csharp
     
