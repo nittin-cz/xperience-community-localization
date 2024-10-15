@@ -61,6 +61,7 @@ internal abstract class LocalizationEditPageBase : ModelEditPage<LocalizationCon
         else
         {
             localizationKeyInfo.Insert();
+            configuration.KeyId = localizationKeyInfo.LocalizationKeyItemId;
         }
 
         foreach (var translation in configuration.Translations)
