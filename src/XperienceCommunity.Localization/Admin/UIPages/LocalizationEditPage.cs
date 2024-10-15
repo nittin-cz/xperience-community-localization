@@ -20,7 +20,7 @@ namespace XperienceCommunity.Localization.Admin.UIPages;
 
 internal class LocalizationEditPage : LocalizationEditPageBase
 {
-    private readonly IPageUrlGenerator pageUrlGenerator;
+    private readonly IPageLinkGenerator pageLinkGenerator;
     private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
     private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
     private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider;
@@ -32,7 +32,7 @@ internal class LocalizationEditPage : LocalizationEditPageBase
     public LocalizationEditPage(
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator,
+        IPageLinkGenerator pageLinkGenerator,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
         IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
         IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider) :
@@ -41,7 +41,7 @@ internal class LocalizationEditPage : LocalizationEditPageBase
                 localizationKeyInfoProvider,
                 localizationTranslationItemInfoProvider)
     {
-        this.pageUrlGenerator = pageUrlGenerator;
+        this.pageLinkGenerator = pageLinkGenerator;
         this.contentLanguageInfoProvider = contentLanguageInfoProvider;
         this.localizationKeyInfoProvider = localizationKeyInfoProvider;
         this.localizationTranslationItemInfoProvider = localizationTranslationItemInfoProvider;
@@ -73,7 +73,7 @@ internal class LocalizationEditPage : LocalizationEditPageBase
 
         if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
-            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationListingPage>())
+            var successResponse = NavigateTo(pageLinkGenerator.GetPath<LocalizationListingPage>())
                 .AddSuccessMessage("Localization key edited");
 
             return Task.FromResult<ICommandResponse>(successResponse);

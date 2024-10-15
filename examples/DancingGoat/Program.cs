@@ -136,5 +136,11 @@ static void ConfigureMembershipServices(IServiceCollection services)
         };
     });
 
+    services.Configure<AdminIdentityOptions>(options =>
+    {
+        // The expiration time span of 8 hours is set for demo purposes only. In production environment, set expiration according to best practices.
+        options.AuthenticationOptions.ExpireTimeSpan = TimeSpan.FromHours(8);
+    });
+
     services.AddAuthorization();
 }

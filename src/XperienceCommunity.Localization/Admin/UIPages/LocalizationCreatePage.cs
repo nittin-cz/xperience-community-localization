@@ -20,14 +20,13 @@ namespace XperienceCommunity.Localization.Admin.UIPages;
 
 internal class LocalizationCreatePage : LocalizationEditPageBase
 {
-    private readonly IPageUrlGenerator pageUrlGenerator;
+    private readonly IPageLinkGenerator pageLinkGenerator;
     private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
     private LocalizationConfigurationModel? model = null;
-    
     public LocalizationCreatePage(
         IFormItemCollectionProvider formItemCollectionProvider,
         IFormDataBinder formDataBinder,
-        IPageUrlGenerator pageUrlGenerator,
+        IPageLinkGenerator pageLinkGenerator,
         IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
         IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfo
@@ -37,7 +36,7 @@ internal class LocalizationCreatePage : LocalizationEditPageBase
             localizationTranslationItemInfo
     )
     {
-        this.pageUrlGenerator = pageUrlGenerator;
+        this.pageLinkGenerator = pageLinkGenerator;
         this.contentLanguageInfoProvider = contentLanguageInfoProvider;
     }
 
@@ -57,7 +56,7 @@ internal class LocalizationCreatePage : LocalizationEditPageBase
 
         if (result.LocalizationModificationResultState == LocalizationModificationResultState.Success)
         {
-            var successResponse = NavigateTo(pageUrlGenerator.GenerateUrl<LocalizationListingPage>())
+            var successResponse = NavigateTo(pageLinkGenerator.GetPath<LocalizationListingPage>())
                 .AddSuccessMessage("Localization key created");
 
             return Task.FromResult<ICommandResponse>(successResponse);
