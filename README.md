@@ -22,7 +22,7 @@ Create translations in Xperience admin UI or programatically and use in your pag
 
 ### Dependencies
 
-- [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download)
+- [ASP.NET Core 8.0](https://dotnet.microsoft.com/en-us/download)
 - [Xperience by Kentico](https://docs.kentico.com/changelog)
 
 ## Package Installation
