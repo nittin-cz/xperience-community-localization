@@ -16,6 +16,7 @@ Create translations in Xperience admin UI or programatically and use in your pag
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
+| >= 29.6.0         | >= 1.4.0        |
 | >= 29.2.0         | >= 1.2.0        |
 | >= 28.4.3         | 1.0.0           |
 
