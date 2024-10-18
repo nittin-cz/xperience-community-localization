@@ -29,7 +29,7 @@ namespace DancingGoat.Sections
         public static IEnumerable<string> GetNarrowZoneRestrictions()
         {
             var restrictedWidgets = new List<string> {
-                HeroImageWidgetViewComponent.IDENTIFIER,
+                HeroImageWidgetViewComponent.IDENTIFIER
             };
 
             return GetWidgetsIdentifiers()
