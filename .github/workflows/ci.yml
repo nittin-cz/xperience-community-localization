@@ -23,10 +23,10 @@ jobs:
       - name: Set VERSION variable from tag
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
 
-      - name: Setup .NET 6.x
+      - name: Setup .NET 8.x
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "6.x"
+          dotnet-version: "8.x"
 
       - name: Get version number
         uses: reecetech/version-increment@2023.9.3
