@@ -8,7 +8,7 @@ namespace XperienceCommunity.Localization.Admin;
 public class LocalizationConfigurationModel
 {
     public int KeyId { get; set; }
-     
+
     [TextInputComponent(Label = "Key", Order = 1)]
     [RequiredValidationRule]
     [MinLengthValidationRule(1)]
@@ -38,7 +38,7 @@ public class LocalizationConfigurationModel
             .Select(x => new LocalizationTranslationModel(x, allLanguages))
             .ToList();
 
-        var languagesWithoutExistingTranslations = allLanguages.Where(x => !allTranslations.Any(y => y.LanguageId == x.ContentLanguageID.ToString()));
+        var languagesWithoutExistingTranslations = allLanguages.Where(x => !allTranslations.Exists(y => y.LanguageId == x.ContentLanguageID.ToString()));
 
         foreach (var language in languagesWithoutExistingTranslations)
         {

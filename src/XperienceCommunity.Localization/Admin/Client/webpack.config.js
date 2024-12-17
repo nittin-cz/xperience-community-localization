@@ -22,7 +22,7 @@ module.exports = (opts) => {
       ],
     },
     devServer: {
-      port: 3009,
+      port: 3011,
     },
   };
 

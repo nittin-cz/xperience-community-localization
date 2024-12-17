@@ -4,7 +4,7 @@
 		<Product>Nittin - Xperience by Kentico Localization</Product>
 		<Title>$(Product)</Title>
 		<PackageId>XperienceCommunity.Localization</PackageId>
-		<Description>Enables localization.</Description>
+		<Description>Enables localization for Xperience by Kentico.</Description>
 		<RepositoryUrl>https://github.com/nittin-cz/xperience-community-localization</RepositoryUrl>
 	</PropertyGroup>
 
@@ -48,12 +48,14 @@
 
 	<ItemGroup>
       <PackageReference Include="Kentico.Xperience.Admin" />
-      <PackageReference Include="Kentico.Xperience.Core" />
-      <PackageReference Include="Kentico.Xperience.WebApp" />
     </ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Admin\Client\dist\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\XperienceCommunity.Localization.Base\XperienceCommunity.Localization.Base.csproj" />
 	</ItemGroup>
 
 </Project>

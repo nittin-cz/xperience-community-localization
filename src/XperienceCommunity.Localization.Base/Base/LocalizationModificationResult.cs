@@ -1,12 +1,12 @@
-﻿namespace XperienceCommunity.Localization.Admin;
+﻿namespace XperienceCommunity.Localization;
 
-internal enum LocalizationModificationResultState
+public enum LocalizationModificationResultState
 {
     Success,
     Failure
 }
 
-internal class LocalizationModificationResult
+public class LocalizationModificationResult
 {
     public LocalizationModificationResultState LocalizationModificationResultState { get; set; }
     public string? Message { get; set; }
