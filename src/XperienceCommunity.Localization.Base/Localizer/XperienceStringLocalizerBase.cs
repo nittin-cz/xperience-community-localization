@@ -10,10 +10,12 @@ using XperienceCommunity.Localization;
 namespace XperienceCommunity.Localizer.Internal
 {
     public class XperienceStringLocalizerBase(IProgressiveCache progressiveCache,
-        IWebsiteChannelContext websiteChannelContext)
+        IWebsiteChannelContext websiteChannelContext,
+        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider)
     {
         private readonly IProgressiveCache progressiveCache = progressiveCache;
         private readonly IWebsiteChannelContext websiteChannelContext = websiteChannelContext;
+        private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider = contentLanguageInfoProvider;
 
         public static string CurrentCulture => System.Globalization.CultureInfo.CurrentCulture.Name;
 
@@ -64,32 +66,84 @@ namespace XperienceCommunity.Localizer.Internal
         private Dictionary<string, string> GetDictionary(string cultureName)
         {
             // Now load up dictionary
-#pragma warning disable IDE0022 // Use expression body for method
+            var langChain = GetLanguageChain(cultureName);
+            if (langChain.Count == 0)
+            {
+                return [];
+            }
             return progressiveCache.Load(cs =>
             {
                 if (cs.Cached)
                 {
-                    cs.CacheDependency = CacheHelper.GetCacheDependency(new string[]
-                    {
+                    cs.CacheDependency = CacheHelper.GetCacheDependency([
                         $"{LocalizationKeyInfo.OBJECT_TYPE}|all",
-                        $"{LocalizationTranslationItemInfo.OBJECT_TYPE}|all",
-                    });
+                        $"{LocalizationTranslationItemInfo.OBJECT_TYPE}|all"
+                    ]);
                 }
-                // TODO: Eventually tie in the language fallback settings for the site, right now only does Culture -> Site Default Culture -> CMS Default Culture.  Should take the current language culture and get it's fallback tree.
+                // This logic will build out the priority listing for the language fallbacks, picking the most accurate match
+                string orderBySql = "order by ";
+                string ends = "";
+                for (int i = 0; i < langChain.Count; i++)
+                {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
+                    orderBySql += $" case when ContentLanguageCultureFormat = '{SqlHelper.EscapeQuotes(langChain[i])}' then {i} else ";
+                    ends += " end ";
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
+                }
+                orderBySql += $" {langChain.Count} {ends}";
+
                 var results = ConnectionHelper.ExecuteQuery(
                     $@"select LocalizationKeyItemName as StringKey, LocalizationTranslationItemText as TranslationText from (
-select ROW_NUMBER() over (partition by LocalizationKeyItemName order by case when ContentLanguageCultureFormat = @CultureName then 0 else case when ContentLanguageCultureFormat = @SiteDefaultCulture then 1 else 2 end end) as priority, LocalizationKeyItemName, LocalizationTranslationItemText from NittinLocalization_LocalizationTranslationItem
+select ROW_NUMBER() over (partition by LocalizationKeyItemName {orderBySql}) as priority, LocalizationKeyItemName, LocalizationTranslationItemText from NittinLocalization_LocalizationTranslationItem
 left join NittinLocalization_LocalizationKeyItem on LocalizationTranslationItemLocalizationKeyItemId = LocalizationKeyItemId
 left join CMS_ContentLanguage on ContentLanguageID = LocalizationTranslationItemContentLanguageId
-where ContentLanguageCultureFormat in (@CultureName, @SiteDefaultCulture, @CMSDefaultCulture)
+where ContentLanguageCultureFormat in ('{string.Join("','", langChain.Select(x => SqlHelper.EscapeQuotes(x)))}')
 ) combined where priority = 1"
-                    , new QueryDataParameters() { { "@CultureName", cultureName }, { "@SiteDefaultCulture", SiteVisitorDefaultCulture }, { "@CMSDefaultCulture", CMSDefaultCulture } }, QueryTypeEnum.SQLQuery);
+                    , [], QueryTypeEnum.SQLQuery);
                 return results.Tables[0].Rows.Cast<DataRow>()
                     .Select(x => new Tuple<string, string>(ValidationHelper.GetString(x["StringKey"], "").ToLowerInvariant(), ValidationHelper.GetString(x["TranslationText"], "")))
                     .GroupBy(x => x.Item1)
                     .ToDictionary(key => key.Key, value => value.First().Item2);
             }, new CacheSettings(1440, "LocalizedStringDictionary", cultureName, SiteVisitorDefaultCulture, CMSDefaultCulture));
-#pragma warning restore IDE0022 // Use expression body for method
+        }
+
+        private List<string> GetLanguageChain(string cultureName)
+        {
+            var chainByCultureName = progressiveCache.Load(cs =>
+            {
+                if (cs.Cached)
+                {
+                    cs.CacheDependency = CacheHelper.GetCacheDependency([
+                        $"{SettingsKeyInfo.OBJECT_TYPE}|byname|CMSDefaultCultureCode",
+                        $"{ContentLanguageInfo.OBJECT_TYPE}|all"]);
+                }
+                var allLanguages = contentLanguageInfoProvider.Get().GetEnumerableTypedResult();
+                var languageById = allLanguages.ToDictionary(key => key.ContentLanguageID, value => value);
+                var dictionary = new Dictionary<string, List<string>>();
+                foreach (var language in allLanguages)
+                {
+                    var fallBackCultureChain = new List<string>
+                    {
+                        language.ContentLanguageCultureFormat
+                    };
+                    int fallbackLangId = language.ContentLanguageFallbackContentLanguageID;
+                    while (fallbackLangId > 0)
+                    {
+                        var fallbackLang = languageById[fallbackLangId];
+                        fallBackCultureChain.Add(fallbackLang.ContentLanguageCultureFormat);
+                        fallbackLangId = fallbackLang.ContentLanguageFallbackContentLanguageID;
+                    }
+                    // Add in default if not in the mix.
+                    if (!fallBackCultureChain.Contains(CMSDefaultCulture))
+                    {
+                        fallBackCultureChain.Add(CMSDefaultCulture);
+                    }
+                    dictionary.Add(language.ContentLanguageCultureFormat.ToLowerInvariant(), fallBackCultureChain);
+                }
+                return dictionary;
+            }, new CacheSettings(1440, "GetFallbackCultures"));
+
+            return chainByCultureName.TryGetValue(cultureName.ToLowerInvariant(), out var fallbackList) ? fallbackList : [SiteVisitorDefaultCulture, CMSDefaultCulture];
         }
 
         internal LocalizedString LocalizeWithKentico(string name, params object[] arguments)
