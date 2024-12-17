@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<Product>Nittin - Xperience by Kentico Localization</Product>
 		<Title>$(Product)</Title>
-		<PackageId>XperienceCommunity.Localization</PackageId>
-		<Description>Enables localization.</Description>
+		<PackageId>XperienceCommunity.Localization.Base</PackageId>
+		<Description>Enables localization for Xperience by Kentico. This package does not include Admin UIs.</Description>
 		<RepositoryUrl>https://github.com/nittin-cz/xperience-community-localization</RepositoryUrl>
 	</PropertyGroup>
 
