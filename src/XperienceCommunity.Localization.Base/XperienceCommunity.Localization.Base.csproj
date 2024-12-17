@@ -26,19 +26,6 @@
 		<!-- Requires that npm run build or npm run build:dev was executed _before_ the .NET build -->
 	</ItemGroup>
 
-	<Target Name="NpmInstall" BeforeTargets="NpmBuildClient" Condition=" '$(Configuration)|$(Platform)' != 'Debug|AnyCPU' ">
-		<Exec Command="npm ci --no-audit --no-fund" WorkingDirectory="$(MSBuildProjectDirectory)\Admin\Client" />
-	</Target>
-	<Target Name="NpmBuildClient" BeforeTargets="BeforeBuild" Condition=" '$(Configuration)|$(Platform)' != 'Debug|AnyCPU' ">
-		<Exec Command="npm run build" WorkingDirectory="$(MSBuildProjectDirectory)\Admin\Client" />
-
-		<ItemGroup>
-			<AdminClientPath Include="Base\Client\dist\**">
-				<ProjectName>xperience-community-localization</ProjectName>
-			</AdminClientPath>
-		</ItemGroup>
-	</Target>
-
 	<ItemGroup>
       <PackageReference Include="Kentico.Xperience.Core" />
     </ItemGroup>
