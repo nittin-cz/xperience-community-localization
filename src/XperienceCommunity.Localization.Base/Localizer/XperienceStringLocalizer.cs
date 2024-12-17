@@ -1,4 +1,6 @@
-﻿using CMS.Helpers;
+﻿using CMS.ContentEngine;
+using CMS.DataEngine;
+using CMS.Helpers;
 using CMS.Websites.Routing;
 using Microsoft.Extensions.Localization;
 using System.Data;
@@ -11,9 +13,11 @@ namespace XperienceCommunity.Localizer.Internal
     /// <param name="localizer">The <see cref="IStringLocalizer"/> to read strings from.</param>
     /// <param name="progressiveCache"></param>
     /// <param name="websiteChannelContext"></param>
+    /// <param name="contentLanguageInfoProvider"></param>
     internal class XperienceStringLocalizer<T>(IStringLocalizer<T> localizer,
         IProgressiveCache progressiveCache,
-        IWebsiteChannelContext websiteChannelContext) : XperienceStringLocalizerBase(progressiveCache, websiteChannelContext), IStringLocalizer<T>
+        IWebsiteChannelContext websiteChannelContext,
+        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : XperienceStringLocalizerBase(progressiveCache, websiteChannelContext, contentLanguageInfoProvider), IStringLocalizer<T>
     {
         private readonly IStringLocalizer<T> localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
 
@@ -34,10 +38,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name);
                 if (result != null && result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, result.SearchedLocation ?? "");
+                    result = localizer[name];
                 }
 
                 return result ?? new LocalizedString(name, string.Empty);
@@ -52,10 +56,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name, arguments);
                 if (result != null && result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, result.SearchedLocation ?? string.Empty, arguments);
+                    result = localizer[name];
                 }
 
                 return result ?? new LocalizedString(name, string.Empty);
@@ -70,9 +74,11 @@ namespace XperienceCommunity.Localizer.Internal
     /// <param name="localizer">The <see cref="IStringLocalizer"/> to read strings from.</param>
     /// <param name="progressiveCache"></param>
     /// <param name="websiteChannelContext"></param>
+    /// <param name="contentLanguageInfoProvider"></param>
     public class XperienceStringLocalizer(IStringLocalizer localizer,
         IProgressiveCache progressiveCache,
-        IWebsiteChannelContext websiteChannelContext) : XperienceStringLocalizerBase(progressiveCache, websiteChannelContext), IStringLocalizer
+        IWebsiteChannelContext websiteChannelContext,
+        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : XperienceStringLocalizerBase(progressiveCache, websiteChannelContext, contentLanguageInfoProvider), IStringLocalizer
     {
         private readonly IStringLocalizer localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
 
@@ -95,10 +101,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name);
                 if (result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name);
+                    result = localizer[name];
                 }
 
                 return result;
@@ -113,10 +119,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name, arguments);
                 if (result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, arguments);
+                    result = localizer[name];
                 }
 
                 return result;

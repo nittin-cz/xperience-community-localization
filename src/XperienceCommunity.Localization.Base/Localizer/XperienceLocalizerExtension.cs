@@ -1,4 +1,6 @@
-﻿using CMS.Helpers;
+﻿using CMS.ContentEngine;
+using CMS.DataEngine;
+using CMS.Helpers;
 using CMS.Websites.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -16,11 +18,18 @@ namespace XperienceCommunity.Localizer
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddXperienceLocalizer(this IServiceCollection services)
+        public static IServiceCollection AddXperienceCommunityLocalization(this IServiceCollection services, Action<LocalizationOptions>? localizationOptions = null)
         {
             // NITTIN
+            if (localizationOptions != null)
+            {
+                services.AddLocalization(localizationOptions);
+            }
+            else
+            {
+                services.AddLocalization();
+            }
             services
-                .AddLocalization()
                 .AddSingleton<LocalizationModuleInstaller>();
 
             services.AddSingleton<IStringLocalizerFactory>((provider) =>
@@ -31,7 +40,8 @@ namespace XperienceCommunity.Localizer
                 var baseStringLocalizerFactory = new ResourceManagerStringLocalizerFactory(options, logger);
                 var websiteChannelContext = provider.GetRequiredService<IWebsiteChannelContext>();
                 var progressiveCache = provider.GetRequiredService<IProgressiveCache>();
-                return new XperienceStringLocalizerFactory(baseStringLocalizerFactory, progressiveCache, websiteChannelContext);
+                var contentLanguageInfoProvider = provider.GetRequiredService<IInfoProvider<ContentLanguageInfo>>();
+                return new XperienceStringLocalizerFactory(baseStringLocalizerFactory, progressiveCache, websiteChannelContext, contentLanguageInfoProvider);
             });
             return services;
         }
