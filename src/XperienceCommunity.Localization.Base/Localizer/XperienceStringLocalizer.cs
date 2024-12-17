@@ -38,10 +38,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name);
                 if (result != null && result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, result.SearchedLocation ?? "");
+                    result = localizer[name];
                 }
 
                 return result ?? new LocalizedString(name, string.Empty);
@@ -56,10 +56,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name, arguments);
                 if (result != null && result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, result.SearchedLocation ?? string.Empty, arguments);
+                    result = localizer[name];
                 }
 
                 return result ?? new LocalizedString(name, string.Empty);
@@ -101,10 +101,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name);
                 if (result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name);
+                    result = localizer[name];
                 }
 
                 return result;
@@ -119,10 +119,10 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                var result = localizer[name];
+                var result = LocalizeWithKentico(name, arguments);
                 if (result.ResourceNotFound)
                 {
-                    result = LocalizeWithKentico(name, arguments);
+                    result = localizer[name];
                 }
 
                 return result;
