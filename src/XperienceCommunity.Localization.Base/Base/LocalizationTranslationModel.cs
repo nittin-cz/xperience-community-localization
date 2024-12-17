@@ -1,6 +1,6 @@
 ﻿using CMS.ContentEngine;
 
-namespace XperienceCommunity.Localization.Admin;
+namespace XperienceCommunity.Localization;
 
 public class LocalizationTranslationModel
 {

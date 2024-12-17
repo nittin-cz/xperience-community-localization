@@ -3,7 +3,7 @@ using CMS.DataEngine;
 using CMS.FormEngine;
 using CMS.Modules;
 
-namespace XperienceCommunity.Localization.Admin;
+namespace XperienceCommunity.Localization;
 
 internal class LocalizationModuleInstaller
 {
