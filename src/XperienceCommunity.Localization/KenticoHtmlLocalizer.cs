@@ -5,11 +5,9 @@ using Microsoft.Extensions.Localization;
 
 namespace XperienceCommunity.Localization;
 
-public class KenticoHtmlLocalizer : IKenticoHtmlLocalizer
+public class KenticoHtmlLocalizer(ILocalizationService localizationService) : IKenticoHtmlLocalizer
 {
-    private readonly ILocalizationService localizationService;
-
-    public KenticoHtmlLocalizer(ILocalizationService localizationService) => this.localizationService = localizationService;
+    private readonly ILocalizationService localizationService = localizationService;
 
     public virtual LocalizedHtmlString this[string name] => new(name, GetStringByName(name) ?? name, isResourceNotFound: GetStringByName(name) == null);
 
