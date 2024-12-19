@@ -34,10 +34,7 @@ namespace XperienceCommunity.Localizer.Internal
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
                 var result = LocalizeWithKentico(name);
                 if (result != null && result.ResourceNotFound)
                 {
@@ -52,10 +49,7 @@ namespace XperienceCommunity.Localizer.Internal
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
                 var result = LocalizeWithKentico(name, arguments);
                 if (result != null && result.ResourceNotFound)
                 {
@@ -75,13 +69,12 @@ namespace XperienceCommunity.Localizer.Internal
     /// <param name="progressiveCache"></param>
     /// <param name="websiteChannelContext"></param>
     /// <param name="contentLanguageInfoProvider"></param>
-    public class XperienceStringLocalizer(IStringLocalizer localizer,
+    internal class XperienceStringLocalizer(IStringLocalizer localizer,
         IProgressiveCache progressiveCache,
         IWebsiteChannelContext websiteChannelContext,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : XperienceStringLocalizerBase(progressiveCache, websiteChannelContext, contentLanguageInfoProvider), IStringLocalizer
     {
         private readonly IStringLocalizer localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-
 
         /// <inheritdoc />
         public virtual IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
@@ -97,10 +90,7 @@ namespace XperienceCommunity.Localizer.Internal
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
                 var result = LocalizeWithKentico(name);
                 if (result.ResourceNotFound)
                 {
@@ -115,10 +105,7 @@ namespace XperienceCommunity.Localizer.Internal
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
+                ArgumentNullException.ThrowIfNull(name);
                 var result = LocalizeWithKentico(name, arguments);
                 if (result.ResourceNotFound)
                 {
@@ -128,6 +115,5 @@ namespace XperienceCommunity.Localizer.Internal
                 return result;
             }
         }
-
     }
 }

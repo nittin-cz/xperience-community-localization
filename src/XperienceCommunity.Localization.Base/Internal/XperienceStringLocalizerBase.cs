@@ -1,5 +1,4 @@
-﻿using AngleSharp.Common;
-using CMS.ContentEngine;
+﻿using CMS.ContentEngine;
 using CMS.DataEngine;
 using CMS.Helpers;
 using CMS.Websites.Routing;
@@ -9,13 +8,22 @@ using XperienceCommunity.Localization;
 
 namespace XperienceCommunity.Localizer.Internal
 {
-    public class XperienceStringLocalizerBase(IProgressiveCache progressiveCache,
+    internal class XperienceStringLocalizerBase(IProgressiveCache progressiveCache,
         IWebsiteChannelContext websiteChannelContext,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider)
     {
-        private readonly IProgressiveCache progressiveCache = progressiveCache;
-        private readonly IWebsiteChannelContext websiteChannelContext = websiteChannelContext;
-        private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider = contentLanguageInfoProvider;
+        private const string WebsiteToLanguageInfoQuery = $@"select WebsiteChannelID, ContentLanguageName, ContentLanguageCultureFormat from CMS_ContentLanguage
+                inner join CMS_WebsiteChannel on WebsiteChannelPrimaryContentLanguageID = ContentLanguageID
+                union all 
+                Select top 1 -1 as WebsiteChannelID, ContentLanguageName, ContentLanguageCultureFormat from CMS_SettingsKey 
+                inner join CMS_ContentLanguage on ContentLanguageCultureFormat = KeyValue or KeyValue like ContentLanguageName+'%'
+                where KeyName = 'CMSDefaultCultureCode'";
+        private const string LocalizationWithLanguagePriorityQuery = @"select LocalizationKeyItemName as StringKey, LocalizationTranslationItemText as TranslationText from (
+select ROW_NUMBER() over (partition by LocalizationKeyItemName {0}) as priority, LocalizationKeyItemName, LocalizationTranslationItemText from NittinLocalization_LocalizationTranslationItem
+left join NittinLocalization_LocalizationKeyItem on LocalizationTranslationItemLocalizationKeyItemId = LocalizationKeyItemId
+left join CMS_ContentLanguage on ContentLanguageID = LocalizationTranslationItemContentLanguageId
+where ContentLanguageCultureFormat in ('{1}')
+) combined where priority = 1";
 
         public static string CurrentCulture => System.Globalization.CultureInfo.CurrentCulture.Name;
 
@@ -33,12 +41,7 @@ namespace XperienceCommunity.Localizer.Internal
                     ]);
                 }
 
-                string query = $@"select WebsiteChannelID, ContentLanguageName, ContentLanguageCultureFormat from CMS_ContentLanguage
-                inner join CMS_WebsiteChannel on WebsiteChannelPrimaryContentLanguageID = ContentLanguageID
-                union all 
-                Select top 1 -1 as WebsiteChannelID, ContentLanguageName, ContentLanguageCultureFormat from CMS_SettingsKey 
-                inner join CMS_ContentLanguage on ContentLanguageCultureFormat = KeyValue or KeyValue like ContentLanguageName+'%'
-                where KeyName = 'CMSDefaultCultureCode'";
+                string query = WebsiteToLanguageInfoQuery;
                 return ConnectionHelper.ExecuteQuery(query, [], QueryTypeEnum.SQLQuery).Tables[0].Rows.Cast<DataRow>()
                 .ToDictionary(key => (int)key["WebsiteChannelID"], value => new LanguageSummary((string)value["ContentLanguageName"], (string)value["ContentLanguageCultureFormat"]));
             }, new CacheSettings(1440, "Localization_WebsiteIdToLanguageInfoDictionary"));
@@ -54,10 +57,7 @@ namespace XperienceCommunity.Localizer.Internal
                 {
                     return summary.CultureName;
                 }
-                else
-                {
-                    return dictionary.TryGetValue(-1, out var defaultSummary) ? defaultSummary.CultureName : "en-US";
-                }
+                return dictionary.TryGetValue(-1, out var defaultSummary) ? defaultSummary.CultureName : "en-US";
             }
         }
 
@@ -93,12 +93,7 @@ namespace XperienceCommunity.Localizer.Internal
                 orderBySql += $" {langChain.Count} {ends}";
 
                 var results = ConnectionHelper.ExecuteQuery(
-                    $@"select LocalizationKeyItemName as StringKey, LocalizationTranslationItemText as TranslationText from (
-select ROW_NUMBER() over (partition by LocalizationKeyItemName {orderBySql}) as priority, LocalizationKeyItemName, LocalizationTranslationItemText from NittinLocalization_LocalizationTranslationItem
-left join NittinLocalization_LocalizationKeyItem on LocalizationTranslationItemLocalizationKeyItemId = LocalizationKeyItemId
-left join CMS_ContentLanguage on ContentLanguageID = LocalizationTranslationItemContentLanguageId
-where ContentLanguageCultureFormat in ('{string.Join("','", langChain.Select(x => SqlHelper.EscapeQuotes(x)))}')
-) combined where priority = 1"
+                    string.Format(LocalizationWithLanguagePriorityQuery, orderBySql, string.Join("','", langChain.Select(x => SqlHelper.EscapeQuotes(x))))
                     , [], QueryTypeEnum.SQLQuery);
                 return results.Tables[0].Rows.Cast<DataRow>()
                     .Select(x => new Tuple<string, string>(ValidationHelper.GetString(x["StringKey"], "").ToLowerInvariant(), ValidationHelper.GetString(x["TranslationText"], "")))

@@ -2,6 +2,7 @@
 using Kentico.Forms.Web.Mvc;
 using Kentico.Xperience.Admin.Base.FormAnnotations;
 using XperienceCommunity.Localization.Admin.Components;
+using XperienceCommunity.Localization.Base;
 
 namespace XperienceCommunity.Localization.Admin;
 

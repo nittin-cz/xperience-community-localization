@@ -7,6 +7,7 @@ using XperienceCommunity.Localization.Admin.UIPages;
 
 using CMS.DataEngine;
 using CMS.ContentEngine;
+using XperienceCommunity.Localization.Base;
 
 [assembly: UIPage(
     parentType: typeof(LocalizationListingPage),
@@ -18,27 +19,20 @@ using CMS.ContentEngine;
 
 namespace XperienceCommunity.Localization.Admin.UIPages;
 
-internal class LocalizationCreatePage : LocalizationEditPageBase
-{
-    private readonly IPageLinkGenerator pageLinkGenerator;
-    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
-    private LocalizationConfigurationModel? model = null;
-    public LocalizationCreatePage(
-        IFormItemCollectionProvider formItemCollectionProvider,
-        IFormDataBinder formDataBinder,
-        IPageLinkGenerator pageLinkGenerator,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
-        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
-        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfo
-    ) : base(formItemCollectionProvider,
-            formDataBinder,
-            localizationKeyInfoProvider,
-            localizationTranslationItemInfo
+internal class LocalizationCreatePage(
+    IFormItemCollectionProvider formItemCollectionProvider,
+    IFormDataBinder formDataBinder,
+    IPageLinkGenerator pageLinkGenerator,
+    IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
+    IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
+    IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfo
+    ) : LocalizationEditPageBase(formItemCollectionProvider,
+        formDataBinder,
+        localizationKeyInfoProvider,
+        localizationTranslationItemInfo
     )
-    {
-        this.pageLinkGenerator = pageLinkGenerator;
-        this.contentLanguageInfoProvider = contentLanguageInfoProvider;
-    }
+{
+    private LocalizationConfigurationModel? model = null;
 
     protected override LocalizationConfigurationModel Model
     {

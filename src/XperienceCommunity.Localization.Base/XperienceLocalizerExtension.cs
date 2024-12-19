@@ -2,14 +2,13 @@
 using CMS.DataEngine;
 using CMS.Helpers;
 using CMS.Websites.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using XperienceCommunity.Localization;
+using XperienceCommunity.Localization.Base;
 using XperienceCommunity.Localizer.Internal;
 
-namespace XperienceCommunity.Localizer
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class XperienceLocalizerExtension
     {
@@ -17,6 +16,7 @@ namespace XperienceCommunity.Localizer
         /// Adds Kentico Localization to the base StringLocalizerFactory, thus adding fallback to all IStringLocalizer / IHtmlLocalizer generated
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="localizationOptions"></param>
         /// <returns></returns>
         public static IServiceCollection AddXperienceCommunityLocalization(this IServiceCollection services, Action<LocalizationOptions>? localizationOptions = null)
         {
@@ -45,7 +45,5 @@ namespace XperienceCommunity.Localizer
             });
             return services;
         }
-
-
     }
 }

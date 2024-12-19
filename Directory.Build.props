@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Company>NITTIN</Company>
-    <Authors>$(Company)</Authors>
+    <Authors>$(Company) and Trevor Fayas</Authors>
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
     <Trademark>$(Company)™</Trademark>
     <VersionPrefix>1.4.0</VersionPrefix>

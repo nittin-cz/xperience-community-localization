@@ -3,12 +3,11 @@ using CMS.Base;
 using CMS.Core;
 using CMS.DataEngine;
 using Microsoft.Extensions.DependencyInjection;
-using XperienceCommunity.Localization;
-
+using XperienceCommunity.Localization.Base;
 
 [assembly: RegisterModule(typeof(LocalizationModule))]
 
-namespace XperienceCommunity.Localization;
+namespace XperienceCommunity.Localization.Base;
 
 /// <summary>
 /// Manages administration features and integration.

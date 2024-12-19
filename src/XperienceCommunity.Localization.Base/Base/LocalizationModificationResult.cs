@@ -1,4 +1,4 @@
-﻿namespace XperienceCommunity.Localization;
+﻿namespace XperienceCommunity.Localization.Base;
 
 public enum LocalizationModificationResultState
 {
@@ -6,13 +6,8 @@ public enum LocalizationModificationResultState
     Failure
 }
 
-public class LocalizationModificationResult
+public class LocalizationModificationResult(LocalizationModificationResultState resultState, string? message = null)
 {
-    public LocalizationModificationResultState LocalizationModificationResultState { get; set; }
-    public string? Message { get; set; }
-    public LocalizationModificationResult(LocalizationModificationResultState resultState, string? message = null)
-    {
-        LocalizationModificationResultState = resultState;
-        Message = message;
-    }
+    public LocalizationModificationResultState LocalizationModificationResultState { get; set; } = resultState;
+    public string? Message { get; set; } = message;
 }

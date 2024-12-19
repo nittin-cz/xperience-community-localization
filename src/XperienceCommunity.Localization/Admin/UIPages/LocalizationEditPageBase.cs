@@ -2,27 +2,18 @@
 
 using Kentico.Xperience.Admin.Base;
 using Kentico.Xperience.Admin.Base.Forms;
-
+using XperienceCommunity.Localization.Base;
 using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.IFormItemCollectionProvider;
 
 namespace XperienceCommunity.Localization.Admin.UIPages;
 
-internal abstract class LocalizationEditPageBase : ModelEditPage<LocalizationConfigurationModel>
+internal abstract class LocalizationEditPageBase(
+    IFormItemCollectionProvider formItemCollectionProvider,
+    IFormDataBinder formDataBinder,
+    IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
+    IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider
+    ) : ModelEditPage<LocalizationConfigurationModel>(formItemCollectionProvider, formDataBinder)
 {
-    private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
-    private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider;
-
-    protected LocalizationEditPageBase(
-        IFormItemCollectionProvider formItemCollectionProvider,
-        IFormDataBinder formDataBinder,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
-        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationInfoProvider
-    ) : base(formItemCollectionProvider, formDataBinder)
-    {
-        this.localizationKeyInfoProvider = localizationKeyInfoProvider;
-        this.localizationTranslationInfoProvider = localizationTranslationInfoProvider;
-    }
-
     protected LocalizationModificationResult ValidateAndProcess(LocalizationConfigurationModel configuration, bool updateExisting = false)
     {
         var localizationKeyInfo = new LocalizationKeyInfo();
@@ -42,7 +33,7 @@ internal abstract class LocalizationEditPageBase : ModelEditPage<LocalizationCon
         if (localizationKeyInfoProvider.Get()
             .WhereEquals(nameof(LocalizationKeyInfo.LocalizationKeyItemName), configuration.KeyName)
             .WhereNotEquals(nameof(LocalizationKeyInfo.LocalizationKeyItemId), configuration.KeyId)
-            .Count() > 0
+            .Any()
         )
         {
             string invalidKeyLanguageCombinationErrorMessage = "A record with the same Localization Key already exists.";

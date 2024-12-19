@@ -11,11 +11,6 @@ namespace XperienceCommunity.Localizer.Internal
         IWebsiteChannelContext websiteChannelContext,
         IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider) : IStringLocalizerFactory
     {
-        private readonly IStringLocalizerFactory baseStringLocalizerFactory = baseStringLocalizerFactory;
-        private readonly IProgressiveCache progressiveCache = progressiveCache;
-        private readonly IWebsiteChannelContext websiteChannelContext = websiteChannelContext;
-        private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider = contentLanguageInfoProvider;
-
         public IStringLocalizer Create(Type resourceSource)
         {
             var baseLocalizer = baseStringLocalizerFactory.Create(resourceSource);

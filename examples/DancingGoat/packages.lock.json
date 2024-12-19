@@ -936,8 +936,13 @@
         "type": "Project",
         "dependencies": {
           "Kentico.Xperience.Admin": "[30.0.0, )",
-          "Kentico.Xperience.Core": "[30.0.0, )",
-          "Kentico.Xperience.WebApp": "[30.0.0, )"
+          "XperienceCommunity.Localization.Base": "[1.4.0, )"
+        }
+      },
+      "xperiencecommunity.localization.base": {
+        "type": "Project",
+        "dependencies": {
+          "Kentico.Xperience.Core": "[30.0.0, )"
         }
       },
       "Kentico.Xperience.Core": {

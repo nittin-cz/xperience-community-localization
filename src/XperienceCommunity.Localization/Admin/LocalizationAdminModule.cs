@@ -5,21 +5,20 @@ using XperienceCommunity.Localization.Admin;
 
 [assembly: RegisterModule(typeof(LocalizationAdminModule))]
 
-namespace XperienceCommunity.Localization.Admin;
-
-/// <summary>
-/// Manages administration features and integration.
-/// </summary>
-internal class LocalizationAdminModule : AdminModule
+namespace XperienceCommunity.Localization.Admin
 {
-    public LocalizationAdminModule() : base(nameof(LocalizationAdminModule)) { }
-
-    protected override void OnInit(ModuleInitParameters parameters)
+    /// <summary>
+    /// Manages administration features and integration.
+    /// </summary>
+    internal class LocalizationAdminModule : AdminModule
     {
-        base.OnInit(parameters);
+        public LocalizationAdminModule() : base(nameof(LocalizationAdminModule)) { }
 
-        RegisterClientModule("nittin", "xperience-community-localization");
+        protected override void OnInit(ModuleInitParameters parameters)
+        {
+            base.OnInit(parameters);
+
+            RegisterClientModule("nittin", "xperience-community-localization");
+        }
     }
-
 }
-
