@@ -30,7 +30,7 @@ jobs:
       - name: Get version from Directory.build.props
         id: get_version
         run: |
-          VERSION=$(grep -oP '(?<=<Version>).*(?=</Version>)' Directory.build.props)
+          VERSION=$(grep -oP '(?<=<VersionPrefix>).*(?=</VersionPrefix>)' Directory.Build.props)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version found: $VERSION"
 
