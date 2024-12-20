@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using DancingGoat;
+﻿using DancingGoat;
 using DancingGoat.Models;
 
 using Kentico.Activities.Web.Mvc;
@@ -25,12 +22,12 @@ builder.Services.AddKentico(features =>
     {
         DefaultSectionIdentifier = ComponentIdentifiers.SINGLE_COLUMN_SECTION,
         RegisterDefaultSection = false,
-        ContentTypeNames = new[]
-        {
+        ContentTypeNames =
+        [
             LandingPage.CONTENT_TYPE_NAME,
             ContactsPage.CONTENT_TYPE_NAME,
             ArticlePage.CONTENT_TYPE_NAME
-        }
+        ]
     });
 
     features.UseWebPageRouting();
@@ -44,13 +41,11 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 builder.Services.AddLocalization()
     .AddControllersWithViews()
     .AddViewLocalization()
-    .AddDataAnnotationsLocalization(options =>
-    {
-        options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResources));
-    });
+    .AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResources)));
 
 builder.Services.AddDancingGoatServices();
 
+// Adds the XperienceCommunity.Localization Package
 builder.Services.AddXperienceCommunityLocalization();
 
 ConfigureMembershipServices(builder.Services);
@@ -128,7 +123,7 @@ static void ConfigureMembershipServices(IServiceCollection services)
         {
             var factory = ctx.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
             var urlHelper = factory.GetUrlHelper(new ActionContext(ctx.HttpContext, new RouteData(ctx.HttpContext.Request.RouteValues), new ActionDescriptor()));
-            var url = urlHelper.Action("Login", "Account") + new Uri(ctx.RedirectUri).Query;
+            string url = urlHelper.Action("Login", "Account") + new Uri(ctx.RedirectUri).Query;
 
             ctx.Response.Redirect(url);
 
@@ -137,10 +132,8 @@ static void ConfigureMembershipServices(IServiceCollection services)
     });
 
     services.Configure<AdminIdentityOptions>(options =>
-    {
         // The expiration time span of 8 hours is set for demo purposes only. In production environment, set expiration according to best practices.
-        options.AuthenticationOptions.ExpireTimeSpan = TimeSpan.FromHours(8);
-    });
+        options.AuthenticationOptions.ExpireTimeSpan = TimeSpan.FromHours(8));
 
     services.AddAuthorization();
 }

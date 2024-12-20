@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DancingGoat", "examples\Dan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XperienceCommunity.Localization", "src\XperienceCommunity.Localization\XperienceCommunity.Localization.csproj", "{F8546028-A663-4F26-9276-5F6A5CB7C43C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XperienceCommunity.Localization.Base", "src\XperienceCommunity.Localization.Base\XperienceCommunity.Localization.Base.csproj", "{6997CDC3-AFC5-49DE-8250-FDC387970CEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{F8546028-A663-4F26-9276-5F6A5CB7C43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8546028-A663-4F26-9276-5F6A5CB7C43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8546028-A663-4F26-9276-5F6A5CB7C43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6997CDC3-AFC5-49DE-8250-FDC387970CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6997CDC3-AFC5-49DE-8250-FDC387970CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6997CDC3-AFC5-49DE-8250-FDC387970CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6997CDC3-AFC5-49DE-8250-FDC387970CEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

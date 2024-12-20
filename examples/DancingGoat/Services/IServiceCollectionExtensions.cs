@@ -3,8 +3,6 @@ using DancingGoat.ViewComponents;
 
 using Kentico.OnlineMarketing.Web.Mvc;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Samples.DancingGoat;
 
 namespace DancingGoat
@@ -44,9 +42,6 @@ namespace DancingGoat
         }
 
 
-        private static void AddViewComponentServices(IServiceCollection services)
-        {
-            services.AddSingleton<NavigationService>();
-        }
+        private static void AddViewComponentServices(IServiceCollection services) => services.AddSingleton<NavigationService>();
     }
 }

@@ -2,6 +2,7 @@
 using Kentico.Xperience.Admin.Base.Forms;
 
 using XperienceCommunity.Localization.Admin.Components;
+using XperienceCommunity.Localization.Base;
 
 [assembly: RegisterFormComponent(
     identifier: LocalizationConfigurationComponent.IDENTIFIER,

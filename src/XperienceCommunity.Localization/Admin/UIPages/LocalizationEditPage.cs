@@ -7,6 +7,7 @@ using IFormItemCollectionProvider = Kentico.Xperience.Admin.Base.Forms.Internal.
 
 using XperienceCommunity.Localization.Admin.UIPages;
 using CMS.ContentEngine;
+using XperienceCommunity.Localization.Base;
 
 [assembly: UIPage(
     parentType: typeof(LocalizationListingPage),
@@ -18,34 +19,24 @@ using CMS.ContentEngine;
 
 namespace XperienceCommunity.Localization.Admin.UIPages;
 
-internal class LocalizationEditPage : LocalizationEditPageBase
+internal class LocalizationEditPage(
+    IFormItemCollectionProvider formItemCollectionProvider,
+    IFormDataBinder formDataBinder,
+    IPageLinkGenerator pageLinkGenerator,
+    IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
+    IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
+    IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider) : LocalizationEditPageBase(formItemCollectionProvider,
+            formDataBinder,
+            localizationKeyInfoProvider,
+            localizationTranslationItemInfoProvider)
 {
-    private readonly IPageLinkGenerator pageLinkGenerator;
-    private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider;
-    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider;
-    private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider;
+    private readonly IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider = localizationKeyInfoProvider;
+    private readonly IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider = contentLanguageInfoProvider;
+    private readonly IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider = localizationTranslationItemInfoProvider;
     private LocalizationConfigurationModel? model = null;
 
     [PageParameter(typeof(IntPageModelBinder))]
     public int KeyIdentifier { get; set; }
-
-    public LocalizationEditPage(
-        IFormItemCollectionProvider formItemCollectionProvider,
-        IFormDataBinder formDataBinder,
-        IPageLinkGenerator pageLinkGenerator,
-        IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
-        IInfoProvider<LocalizationKeyInfo> localizationKeyInfoProvider,
-        IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider) :
-            base(formItemCollectionProvider,
-                formDataBinder,
-                localizationKeyInfoProvider,
-                localizationTranslationItemInfoProvider)
-    {
-        this.pageLinkGenerator = pageLinkGenerator;
-        this.contentLanguageInfoProvider = contentLanguageInfoProvider;
-        this.localizationKeyInfoProvider = localizationKeyInfoProvider;
-        this.localizationTranslationItemInfoProvider = localizationTranslationItemInfoProvider;
-    }
 
     protected override LocalizationConfigurationModel Model
     {

@@ -1,37 +1,24 @@
 ﻿using CMS;
-using CMS.Base;
 using CMS.Core;
 using Kentico.Xperience.Admin.Base;
-using Microsoft.Extensions.DependencyInjection;
 using XperienceCommunity.Localization.Admin;
 
 [assembly: RegisterModule(typeof(LocalizationAdminModule))]
 
-namespace XperienceCommunity.Localization.Admin;
-
-/// <summary>
-/// Manages administration features and integration.
-/// </summary>
-internal class LocalizationAdminModule : AdminModule
+namespace XperienceCommunity.Localization.Admin
 {
-    private LocalizationModuleInstaller installer = null!;
-
-    public LocalizationAdminModule() : base(nameof(LocalizationAdminModule)) { }
-
-    protected override void OnInit(ModuleInitParameters parameters)
+    /// <summary>
+    /// Manages administration features and integration.
+    /// </summary>
+    internal class LocalizationAdminModule : AdminModule
     {
-        base.OnInit(parameters);
+        public LocalizationAdminModule() : base(nameof(LocalizationAdminModule)) { }
 
-        RegisterClientModule("nittin", "xperience-community-localization");
+        protected override void OnInit(ModuleInitParameters parameters)
+        {
+            base.OnInit(parameters);
 
-        var services = parameters.Services;
-
-        installer = services.GetRequiredService<LocalizationModuleInstaller>();
-
-        ApplicationEvents.Initialized.Execute += InitializeModule;
+            RegisterClientModule("nittin", "xperience-community-localization");
+        }
     }
-
-    private void InitializeModule(object? sender, EventArgs e) =>
-        installer.Install();
 }
-

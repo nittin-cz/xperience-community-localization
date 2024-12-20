@@ -3,14 +3,10 @@ using CMS.DataEngine;
 using CMS.FormEngine;
 using CMS.Modules;
 
-namespace XperienceCommunity.Localization.Admin;
+namespace XperienceCommunity.Localization.Base;
 
-internal class LocalizationModuleInstaller
+internal class LocalizationModuleInstaller(IInfoProvider<ResourceInfo> resourceProvider)
 {
-    private readonly IInfoProvider<ResourceInfo> resourceProvider;
-
-    public LocalizationModuleInstaller(IInfoProvider<ResourceInfo> resourceProvider) => this.resourceProvider = resourceProvider;
-
     public void Install()
     {
         var resource = resourceProvider.Get("XperienceCommunity.Localization") ?? new ResourceInfo();
@@ -35,7 +31,7 @@ internal class LocalizationModuleInstaller
         return resource;
     }
 
-    public void InstallLocalizationKeyInfo(ResourceInfo resource)
+    public static void InstallLocalizationKeyInfo(ResourceInfo resource)
     {
         var info = DataClassInfoProvider.GetDataClassInfo(LocalizationKeyInfo.OBJECT_TYPE) ?? DataClassInfo.New(LocalizationKeyInfo.OBJECT_TYPE);
 
@@ -89,7 +85,7 @@ internal class LocalizationModuleInstaller
         }
     }
 
-    public void InstallLocalizationTranslationInfo(ResourceInfo resource)
+    public static void InstallLocalizationTranslationInfo(ResourceInfo resource)
     {
         var info = DataClassInfoProvider.GetDataClassInfo(LocalizationTranslationItemInfo.OBJECT_TYPE) ?? DataClassInfo.New(LocalizationTranslationItemInfo.OBJECT_TYPE);
 
