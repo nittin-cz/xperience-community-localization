@@ -1,0 +1,21 @@
+name: Build and push nuget to registry
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  Build_base:
+    if: ${{ github.repository_owner == 'nittin-cz' }}
+    uses: ./.github/workflows/ci.yml
+    with:
+      package-id: XperienceCommunity.Localization.Base
+    secrets:
+      nuget_api_key: ${{ secrets.NUGET_API_KEY }}
+
+  Build_localization:
+    if: ${{ github.repository_owner == 'nittin-cz' }}
+    uses: ./.github/workflows/ci.yml
+    with:
+      package-id: XperienceCommunity.Localization
+    secrets:
+      nuget_api_key: ${{ secrets.NUGET_API_KEY }}
