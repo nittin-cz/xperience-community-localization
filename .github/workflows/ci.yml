@@ -41,7 +41,7 @@ jobs:
 
       - name: Package the project
         run: |
-          dotnet pack src/XperienceCommunity.Localization/XperienceCommunity.Localization.csproj -p:PackageID=${{ inputs.package-id }} -p:Version=${{ env.VERSION }} --configuration Release
+          dotnet pack "src/${{ inputs.package-id }}/${{ inputs.package-id }}.csproj" -p:Version=${{ env.VERSION }} --configuration Release --no-restore
 
       - name: Publish the package
         run: |
