@@ -41,7 +41,7 @@ jobs:
 
       - name: Package the project
         run: |
-          dotnet pack "src/${{ inputs.package-id }}/${{ inputs.package-id }}.csproj" -p:Version=${{ env.VERSION }} --configuration Release --no-restore
+          dotnet pack "src/${{ inputs.package-id }}/${{ inputs.package-id }}.csproj" -p:Version=${{ env.VERSION }} --configuration Release
 
       - name: Publish the package
         run: |
