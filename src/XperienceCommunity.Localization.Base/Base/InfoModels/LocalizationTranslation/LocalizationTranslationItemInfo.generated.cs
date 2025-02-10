@@ -33,7 +33,7 @@ namespace XperienceCommunity.Localization
             TouchCacheDependencies = true,
             DependsOn = new List<ObjectDependency>()
             {
-                new(nameof(LocalizationTranslationItemID), LocalizationKeyInfo.OBJECT_TYPE, ObjectDependencyEnum.Required),
+                new(nameof(LocalizationTranslationItemLocalizationKeyItemId), LocalizationKeyInfo.OBJECT_TYPE, ObjectDependencyEnum.Required),
                 new(nameof(LocalizationTranslationItemContentLanguageId), ContentLanguageInfo.OBJECT_TYPE, ObjectDependencyEnum.Required),
             },
             ContinuousIntegrationSettings =
