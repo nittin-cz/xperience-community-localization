@@ -16,11 +16,13 @@ Create translations in Xperience admin UI or programatically and use in your pag
 
 | Xperience Version | Library Version |
 | ----------------- | --------------- |
-| >= 30.0.0         | >= 2.0.0        |
+| >= 31.8.1         | >= 2.0.2        |
+| >= 30.0.0         | 2.0.0 - 2.0.1   |
 | >= 29.6.0         | >= 1.4.0        |
 | >= 29.2.0         | >= 1.2.0        |
 | >= 28.4.3         | 1.0.0           |
 
+> **Note:** Xperience by Kentico refresh 30.6.0 changed the signature of the `ColumnConfigurationExtensions.AddColumn` method used by this library's admin UI, which caused a 500 error when opening the Localizations application on refresh 30.6.0 and newer (see [issue #28](https://github.com/nittin-cz/xperience-community-localization/issues/28)). Library version 2.0.2 fixes this by targeting Xperience 31.8.1. If you are on an older Xperience 30.x/31.x refresh, [update your Xperience project](https://docs.kentico.com/documentation/developers-and-admins/installation/update-xperience-by-kentico-projects) before upgrading this library, or stay on library version 2.0.1.
 
 ### Dependencies
 
@@ -236,6 +238,8 @@ builder.Services.AddXperienceCommunityLocalization<ExampleHtmlLocalizer, Kentico
 ## Contributing
 
 Instructions and technical details for contributing to **this** project can be found in [Contributing Setup](./docs/Contributing-Setup.md).
+
+For maintainers: see [Upgrading-Xperience-Version.md](docs/Upgrading-Xperience-Version.md) for moving the library and the `DancingGoat` sample project to a newer Xperience by Kentico refresh, and [Releasing-NuGet-Packages.md](docs/Releasing-NuGet-Packages.md) for versioning and publishing new NuGet package releases.
 
 ## License
 
