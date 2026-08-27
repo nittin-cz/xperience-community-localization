@@ -50,9 +50,12 @@ triggered GitHub Actions workflow — there is no automatic release-on-merge.
    Only repository owner `nittin-cz` can trigger this workflow (enforced by an `if:` condition in
    the workflow). Publishing requires:
 
-   - A [Trusted Publishing policy](https://www.nuget.org/account/trustedpublishing) configured on
-     the `NITTIN` nuget.org account for this exact repository, workflow file
-     (`build_and_publish.yml`), and the `production` environment.
+   - A [Trusted Publishing policy](https://www.nuget.org/account/trustedpublishing) for the
+     `XperienceCommunity.Localization`/`.Base` packages, configured for this exact repository,
+     workflow file (`build_and_publish.yml`), and the `production` environment. The `user:` input
+     passed to `NuGet/login@v1` in the workflow must be the nuget.org username of the account that
+     **created** the policy (visible in your own nuget.org account, not the package owner — nuget.org
+     returns `401 ... No matching trust policy owned by user '<X>'` if this doesn't match).
    - The `production` environment to exist in the repository's **Settings → Environments** (GitHub
      Actions creates it automatically the first time a workflow references it, if it isn't there
      already).
@@ -93,11 +96,16 @@ does **not** publish anything — it's only useful to catch packaging errors ear
 
 - **Workflow fails at the "Get version" step** — `Directory.Build.props` must contain a
   `<VersionPrefix>X.Y.Z</VersionPrefix>` line; the workflow extracts it with a regex.
-- **`NuGet login` step fails / no token issued** — the job must have `permissions: id-token: write`
-  and run under the `production` GitHub environment, matching the Trusted Publishing policy
-  exactly (repository owner, repository name, workflow filename, environment). Check the policy at
-  [nuget.org/account/trustedpublishing](https://www.nuget.org/account/trustedpublishing) under the
-  `NITTIN` account.
+- **`NuGet login` step fails with `401 ... No matching trust policy owned by user 'X'`** — the
+  `user:` input in the workflow must be the nuget.org username of whoever **created** the Trusted
+  Publishing policy, not the package owner account. Check your own username at
+  [nuget.org/account](https://www.nuget.org/account) and update the workflow's `user:` value to
+  match.
+- **`NuGet login` step fails / no token issued (other errors)** — the job must have
+  `permissions: id-token: write` and run under the `production` GitHub environment, matching the
+  Trusted Publishing policy exactly (repository owner, repository name, workflow filename,
+  environment). Check the policy at
+  [nuget.org/account/trustedpublishing](https://www.nuget.org/account/trustedpublishing).
 - **`dotnet nuget push` fails with 403** — the short-lived key from the login step expires quickly
   (~1 hour); make sure the push step runs right after the login step. If the Trusted Publishing
   policy itself doesn't grant push rights for a package ID (glob pattern), the login step's issued
