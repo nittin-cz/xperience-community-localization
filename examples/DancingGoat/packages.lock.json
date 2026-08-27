@@ -1232,7 +1232,7 @@
         "type": "Project",
         "dependencies": {
           "Kentico.Xperience.Admin": "[31.8.1, )",
-          "XperienceCommunity.Localization.Base": "[2.0.1, )"
+          "XperienceCommunity.Localization.Base": "[2.0.2, )"
         }
       },
       "xperiencecommunity.localization.base": {
