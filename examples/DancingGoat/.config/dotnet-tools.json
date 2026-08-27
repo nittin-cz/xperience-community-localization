@@ -3,12 +3,11 @@
   "isRoot": true,
   "tools": {
     "kentico.xperience.dbmanager": {
-      "version": "29.5.3",
+      "version": "31.8.1",
       "commands": [
         "kentico-xperience-dbmanager"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }
-
-
