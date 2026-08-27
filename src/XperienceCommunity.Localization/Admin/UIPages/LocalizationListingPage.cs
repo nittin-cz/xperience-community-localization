@@ -23,9 +23,11 @@ public class LocalizationListingPage(
     IInfoProvider<ContentLanguageInfo> contentLanguageInfoProvider,
     IInfoProvider<LocalizationTranslationItemInfo> localizationTranslationItemInfoProvider) : ListingPage
 {
+    private const int TranslationPreviewMaxLength = 40;
+
     private string? _searchTerm;
     private List<ContentLanguageInfo>? _languages;
-    private Dictionary<int, HashSet<int>>? _translatedLanguageIdsByKeyId;
+    private Dictionary<int, Dictionary<int, string>>? _translationsByKeyId;
 
     protected override string ObjectType => LocalizationKeyInfo.OBJECT_TYPE;
 
@@ -99,16 +101,21 @@ public class LocalizationListingPage(
         // modelRetriever, which cannot itself run async DB queries per row.
         _languages = contentLanguageInfoProvider.Get().GetEnumerableTypedResult().ToList();
 
-        _translatedLanguageIdsByKeyId = localizationTranslationItemInfoProvider.Get()
+        _translationsByKeyId = localizationTranslationItemInfoProvider.Get()
             .WhereNotEmpty(nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemText))
             .Columns(
                 nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemLocalizationKeyItemId),
-                nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemContentLanguageId))
+                nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemContentLanguageId),
+                nameof(LocalizationTranslationItemInfo.LocalizationTranslationItemText))
             .GetEnumerableTypedResult()
             .GroupBy(translation => translation.LocalizationTranslationItemLocalizationKeyItemId)
             .ToDictionary(
                 group => group.Key,
-                group => group.Select(translation => translation.LocalizationTranslationItemContentLanguageId).ToHashSet());
+                // GroupBy-then-First (instead of a plain ToDictionary) tolerates duplicate
+                // (key, language) rows rather than throwing, since it isn't DB-enforced unique.
+                group => group
+                    .GroupBy(translation => translation.LocalizationTranslationItemContentLanguageId)
+                    .ToDictionary(g => g.Key, g => g.First().LocalizationTranslationItemText));
 
         return base.LoadData(settings, cancellationToken);
     }
@@ -116,11 +123,20 @@ public class LocalizationListingPage(
     private TranslationStatusCellModel GetTranslationStatus(int keyId)
     {
         var languages = _languages ?? [];
-        var translatedLanguageIds = _translatedLanguageIdsByKeyId?.GetValueOrDefault(keyId) ?? [];
+        var translations = _translationsByKeyId?.GetValueOrDefault(keyId) ?? [];
 
         var missingLanguageNames = languages
-            .Where(language => !translatedLanguageIds.Contains(language.ContentLanguageID))
+            .Where(language => !translations.ContainsKey(language.ContentLanguageID))
             .Select(language => language.ContentLanguageDisplayName)
+            .ToList();
+
+        var translationPreviews = languages
+            .Where(language => translations.ContainsKey(language.ContentLanguageID))
+            .Select(language => new TranslationPreviewModel
+            {
+                LanguageName = language.ContentLanguageDisplayName,
+                Text = Truncate(translations[language.ContentLanguageID], TranslationPreviewMaxLength)
+            })
             .ToList();
 
         string status;
@@ -128,7 +144,7 @@ public class LocalizationListingPage(
         {
             status = "complete";
         }
-        else if (translatedLanguageIds.Count == 0)
+        else if (translationPreviews.Count == 0)
         {
             status = "none";
         }
@@ -140,9 +156,13 @@ public class LocalizationListingPage(
         return new TranslationStatusCellModel
         {
             Status = status,
-            MissingLanguageNames = missingLanguageNames
+            MissingLanguageNames = missingLanguageNames,
+            Translations = translationPreviews
         };
     }
+
+    private static string Truncate(string value, int maxLength)
+        => value.Length <= maxLength ? value : string.Concat(value.AsSpan(0, maxLength), "…");
 
     [PageCommand]
     public override Task<ICommandResponse<RowActionResult>> Delete(int id) => base.Delete(id);
