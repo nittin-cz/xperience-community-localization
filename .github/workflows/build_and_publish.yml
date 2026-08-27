@@ -2,20 +2,49 @@ name: Build and push nuget to registry
 
 on:
   workflow_dispatch:
-  
-jobs:
-  Build_base:
-    if: ${{ github.repository_owner == 'nittin-cz' }}
-    uses: ./.github/workflows/ci.yml
-    with:
-      package-id: XperienceCommunity.Localization.Base
-    secrets:
-      nuget_api_key: ${{ secrets.NUGET_API_KEY }}
 
-  Build_localization:
+env:
+  VERSION:
+
+jobs:
+  Build_and_publish:
     if: ${{ github.repository_owner == 'nittin-cz' }}
-    uses: ./.github/workflows/ci.yml
-    with:
-      package-id: XperienceCommunity.Localization
-    secrets:
-      nuget_api_key: ${{ secrets.NUGET_API_KEY }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        package-id:
+          - XperienceCommunity.Localization.Base
+          - XperienceCommunity.Localization
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from Directory.build.props
+        id: get_version
+        run: |
+          VERSION=$(grep -oP '(?<=<VersionPrefix>).*(?=</VersionPrefix>)' Directory.Build.props)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version found: $VERSION"
+
+      - name: Setup .NET 8.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.x"
+
+      - name: Package the project
+        run: |
+          dotnet pack "src/${{ matrix.package-id }}/${{ matrix.package-id }}.csproj" -p:Version=${{ env.VERSION }} --configuration Release
+
+      - name: NuGet login (OIDC -> short-lived API key)
+        uses: NuGet/login@v1
+        id: nuget_login
+        with:
+          user: NITTIN
+
+      - name: Publish the package
+        run: |
+          dotnet nuget push "src/${{ matrix.package-id }}/bin/Release/${{ matrix.package-id }}.${{ env.VERSION }}.nupkg" --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"
