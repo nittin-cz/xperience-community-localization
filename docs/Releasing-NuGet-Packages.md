@@ -36,16 +36,29 @@ triggered GitHub Actions workflow — there is no automatic release-on-merge.
    - Select **Build and push nuget to registry** in the left sidebar.
    - Click **Run workflow**, choose the `main` branch, and confirm.
 
-   The workflow runs two jobs in parallel — one per package (`XperienceCommunity.Localization.Base`
-   and `XperienceCommunity.Localization`) — each of which:
+   The workflow runs one job per package (`XperienceCommunity.Localization.Base` and
+   `XperienceCommunity.Localization`, via a build matrix) in the `production` GitHub environment.
+   Each matrix run:
 
    - Reads the version from `Directory.Build.props`.
    - Runs `dotnet pack` for the package's `.csproj` in `Release` configuration.
-   - Publishes the resulting `.nupkg` to [nuget.org](https://www.nuget.org) using the
-     `NUGET_API_KEY` repository secret.
+   - Publishes the resulting `.nupkg` to [nuget.org](https://www.nuget.org) using
+     [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
+     (the `NuGet/login@v1` action, which exchanges the workflow's GitHub OIDC token for a
+     short-lived nuget.org API key — **no long-lived API key secret is stored in the repository**).
 
    Only repository owner `nittin-cz` can trigger this workflow (enforced by an `if:` condition in
-   the workflow), and it requires the `NUGET_API_KEY` secret to be configured on the repository.
+   the workflow). Publishing requires:
+
+   - A [Trusted Publishing policy](https://www.nuget.org/account/trustedpublishing) configured on
+     the `NITTIN` nuget.org account for this exact repository, workflow file
+     (`build_and_publish.yml`), and the `production` environment.
+   - The `production` environment to exist in the repository's **Settings → Environments** (GitHub
+     Actions creates it automatically the first time a workflow references it, if it isn't there
+     already).
+
+   This replaced an older setup that pushed with a static `NUGET_API_KEY` repository secret; see
+   [issue troubleshooting](#troubleshooting) below if you hit an old reference to that secret.
 
 4. **Verify the published packages.**
    Check [nuget.org/packages/XperienceCommunity.Localization](https://www.nuget.org/packages/XperienceCommunity.Localization)
@@ -80,7 +93,14 @@ does **not** publish anything — it's only useful to catch packaging errors ear
 
 - **Workflow fails at the "Get version" step** — `Directory.Build.props` must contain a
   `<VersionPrefix>X.Y.Z</VersionPrefix>` line; the workflow extracts it with a regex.
-- **`dotnet nuget push` fails with 403** — the `NUGET_API_KEY` secret is missing, expired, or
-  lacks push permission for these package IDs on nuget.org.
+- **`NuGet login` step fails / no token issued** — the job must have `permissions: id-token: write`
+  and run under the `production` GitHub environment, matching the Trusted Publishing policy
+  exactly (repository owner, repository name, workflow filename, environment). Check the policy at
+  [nuget.org/account/trustedpublishing](https://www.nuget.org/account/trustedpublishing) under the
+  `NITTIN` account.
+- **`dotnet nuget push` fails with 403** — the short-lived key from the login step expires quickly
+  (~1 hour); make sure the push step runs right after the login step. If the Trusted Publishing
+  policy itself doesn't grant push rights for a package ID (glob pattern), the login step's issued
+  key won't be able to push it.
 - **Version already exists on nuget.org** — nuget.org does not allow re-publishing the same
   version; bump `VersionPrefix` again and re-run the workflow.
