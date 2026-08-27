@@ -4,9 +4,15 @@ import { MdCheckCircle, MdError, MdWarning } from 'react-icons/md';
 
 export type TranslationStatus = 'complete' | 'partial' | 'none';
 
+export interface TranslationPreview {
+    languageName: string;
+    text: string;
+}
+
 export interface TranslationStatusTableCellComponentProps {
     status: TranslationStatus;
     missingLanguageNames: string[];
+    translations: TranslationPreview[];
 }
 
 const statusColorByStatus: Record<TranslationStatus, string> = {
@@ -29,23 +35,30 @@ const StatusIcon = ({ status }: { status: TranslationStatus }): JSX.Element => {
     return <MdError color={color} size={18} />;
 };
 
-const getTooltipText = (props: TranslationStatusTableCellComponentProps): string => {
-    if (props.status === 'complete') {
-        return 'All languages translated';
-    }
-
+const TooltipContent = (props: TranslationStatusTableCellComponentProps): JSX.Element => {
     if (props.status === 'none') {
-        return 'No translations';
+        return <span>No translations</span>;
     }
 
-    return `Missing: ${props.missingLanguageNames.join(', ')}`;
+    return (
+        <span>
+            {props.translations.map(translation => (
+                <div key={translation.languageName}>
+                    <strong>{translation.languageName}:</strong> {translation.text}
+                </div>
+            ))}
+            {props.missingLanguageNames.length > 0 && (
+                <div>Missing: {props.missingLanguageNames.join(', ')}</div>
+            )}
+        </span>
+    );
 };
 
 export const TranslationStatusTableCellComponent = (
     props: TranslationStatusTableCellComponentProps,
 ): JSX.Element => {
     return (
-        <Tooltip title={getTooltipText(props)}>
+        <Tooltip title={<TooltipContent {...props} />}>
             <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                 <StatusIcon status={props.status} />
             </span>
